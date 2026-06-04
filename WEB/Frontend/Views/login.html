@@ -1,0 +1,80 @@
+<section class="auth-section section-shell">
+    <div class="container auth-grid">
+        <div class="auth-info reveal-on-load">
+            <span class="eyebrow">Acceso seguro</span>
+            <h1>Banca en línea Future Bank</h1>
+            <p>Inicia sesión o crea tu usuario para acceder a los servicios digitales del banco.</p>
+
+            <div class="security-list">
+                <div>
+                    <strong>Protección de sesión</strong>
+                    <span>Preparado para integrarse con PHP y manejo de roles.</span>
+                </div>
+                <div>
+                    <strong>Diseño responsive</strong>
+                    <span>Funciona en escritorio, tablet y móvil.</span>
+                </div>
+                <div>
+                    <strong>Interfaz limpia</strong>
+                    <span>Formularios claros y enfocados en la acción principal.</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="auth-panel reveal-on-load">
+            <ul class="nav nav-pills bank-tabs" id="authTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="login-tab" data-bs-toggle="pill" data-bs-target="#login-pane" type="button" role="tab" aria-controls="login-pane" aria-selected="true">Iniciar sesión</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="register-tab" data-bs-toggle="pill" data-bs-target="#register-pane" type="button" role="tab" aria-controls="register-pane" aria-selected="false">Registrarse</button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="authTabsContent">
+                <div class="tab-pane fade show active" id="login-pane" role="tabpanel" aria-labelledby="login-tab" tabindex="0">
+                    <form class="bank-form" id="iniciaSesionForm" method="post" action="../Backend/PHP/controller/login.php">
+                        <div class="form-group">
+                            <label for="inputUser">Usuario o correo</label>
+                            <input type="text" id="inputUser" name="inputUser" placeholder="ejemplo@correo.com" autocomplete="username" required>
+                        </div>
+
+                        <div class="form-group password-group">
+                            <label for="inputPassword">Contraseña</label>
+                            <div class="password-wrapper">
+                                <input type="password" id="inputPassword" name="inputPassword" placeholder="Ingresa tu contraseña" autocomplete="current-password" required>
+                                <button type="button" class="password-toggle" data-toggle-password="inputPassword">Ver</button>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-bank-primary w-100">Iniciar sesión</button>
+                    </form>
+                </div>
+
+                <div class="tab-pane fade" id="register-pane" role="tabpanel" aria-labelledby="register-tab" tabindex="0">
+                    <form class="bank-form" id="registrarUserForm" method="post" action="../Backend/PHP/controller/registro.php">
+                        <div class="form-group">
+                            <label for="inputUserReg">Usuario</label>
+                            <input type="text" id="inputUserReg" name="inputUserReg" placeholder="Crea tu usuario" autocomplete="username" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputEmailReg">Correo electrónico</label>
+                            <input type="email" id="inputEmailReg" name="inputEmailReg" placeholder="tu-correo@dominio.com" autocomplete="email" required>
+                        </div>
+
+                        <div class="form-group password-group">
+                            <label for="inputPasswordReg">Contraseña</label>
+                            <div class="password-wrapper">
+                                <input type="password" id="inputPasswordReg" name="inputPasswordReg" placeholder="Crea una contraseña segura" autocomplete="new-password" required>
+                                <button type="button" class="password-toggle" data-toggle-password="inputPasswordReg">Ver</button>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-bank-primary w-100">Crear cuenta</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

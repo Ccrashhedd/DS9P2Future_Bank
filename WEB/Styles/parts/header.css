@@ -1,0 +1,95 @@
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    padding: 0.75rem 0;
+    backdrop-filter: blur(18px);
+    background: rgba(8, 5, 17, 0.72);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.bank-navbar {
+    padding: 0;
+}
+
+.brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    color: var(--color-white);
+}
+
+.brand:hover {
+    color: var(--color-white);
+}
+
+.brand-mark {
+    display: grid;
+    width: 2.8rem;
+    height: 2.8rem;
+    place-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    border-radius: 1rem;
+    color: var(--color-white);
+    background: linear-gradient(135deg, var(--color-primary), #2e1065 62%, var(--color-silver-dark));
+    box-shadow: 0 16px 34px rgba(109, 40, 217, 0.28);
+    font-weight: 900;
+}
+
+.brand-text {
+    display: grid;
+    line-height: 1.05;
+}
+
+.brand-text strong {
+    font-size: 1rem;
+    letter-spacing: -0.02em;
+}
+
+.brand-text small {
+    color: var(--color-muted);
+    font-size: 0.76rem;
+}
+
+.bank-navbar .nav-link {
+    position: relative;
+    border-radius: 999px;
+    color: var(--color-muted);
+    font-weight: 700;
+    padding: 0.7rem 1rem;
+}
+
+.bank-navbar .nav-link:hover,
+.bank-navbar .nav-link.active {
+    color: var(--color-white);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.bank-navbar .nav-pill {
+    color: var(--color-white);
+    background: linear-gradient(135deg, rgba(109, 40, 217, 0.9), rgba(168, 85, 247, 0.75));
+    box-shadow: 0 14px 34px rgba(109, 40, 217, 0.26);
+}
+
+.bank-toggler {
+    border: 1px solid var(--color-border);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.navbar-toggler:focus {
+    box-shadow: 0 0 0 0.2rem rgba(168, 85, 247, 0.22);
+}
+
+.navbar-toggler-icon {
+    filter: invert(1) grayscale(1);
+}
+
+@media (max-width: 991px) {
+    .navbar-collapse {
+        margin-top: 1rem;
+        padding: 1rem;
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-md);
+        background: rgba(13, 7, 28, 0.94);
+    }
+}

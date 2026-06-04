@@ -1,0 +1,430 @@
+.hero-section {
+    min-height: 78vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.hero-grid,
+.auth-grid,
+.application-grid {
+    display: grid;
+    align-items: center;
+    gap: clamp(2rem, 6vw, 5rem);
+}
+
+.hero-grid {
+    grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.95fr);
+}
+
+.hero-content h1,
+.auth-info h1,
+.application-copy h1 {
+    max-width: 760px;
+    font-size: clamp(2.5rem, 7vw, 5.9rem);
+    line-height: 0.94;
+    color: var(--color-white);
+}
+
+.hero-text,
+.auth-info p,
+.application-copy p,
+.cta-card p {
+    max-width: 640px;
+    margin-top: 1.3rem;
+    color: var(--color-muted);
+    font-size: clamp(1rem, 2vw, 1.18rem);
+    line-height: 1.75;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+}
+
+.trust-row,
+.mini-stats {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+}
+
+.trust-row div,
+.mini-stats div {
+    min-width: 130px;
+    padding: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.trust-row strong,
+.mini-stats strong {
+    display: block;
+    font-size: 1.35rem;
+    color: var(--color-white);
+}
+
+.trust-row span,
+.mini-stats span {
+    color: var(--color-muted);
+    font-size: 0.9rem;
+}
+
+.bank-card-preview {
+    position: relative;
+    min-height: 430px;
+    padding: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 2.2rem;
+    background:
+        linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.04)),
+        radial-gradient(circle at 20% 20%, rgba(168, 85, 247, 0.65), transparent 13rem),
+        linear-gradient(145deg, #2e1065, #090515 62%, #a5a8b5);
+    box-shadow: var(--shadow-purple);
+    overflow: hidden;
+    transform: rotate(2deg);
+}
+
+.bank-card-preview::after {
+    content: '';
+    position: absolute;
+    inset: 1px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(255,255,255,0.18), transparent 46%);
+    pointer-events: none;
+}
+
+.card-chip {
+    width: 4rem;
+    height: 3rem;
+    border-radius: 0.8rem;
+    background: linear-gradient(135deg, #f8fafc, #9ca3af);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.45);
+}
+
+.card-topline,
+.card-meta {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 2rem;
+    color: rgba(255,255,255,0.86);
+    font-weight: 700;
+}
+
+.card-number {
+    position: relative;
+    z-index: 1;
+    margin-top: 6.5rem;
+    color: var(--color-white);
+    font-size: clamp(1.4rem, 3vw, 2.2rem);
+    letter-spacing: 0.16em;
+    font-weight: 800;
+}
+
+.card-meta {
+    align-items: end;
+}
+
+.card-meta span {
+    color: var(--color-muted);
+}
+
+.card-meta strong {
+    font-size: 1.8rem;
+}
+
+.card-wave {
+    position: absolute;
+    right: -6rem;
+    bottom: -5rem;
+    width: 18rem;
+    height: 18rem;
+    border: 1px solid rgba(255,255,255,0.28);
+    border-radius: 999px;
+    box-shadow: inset 0 0 80px rgba(255,255,255,0.08);
+}
+
+.hero-glow {
+    position: absolute;
+    width: 28rem;
+    height: 28rem;
+    border-radius: 999px;
+    filter: blur(24px);
+    opacity: 0.28;
+    pointer-events: none;
+}
+
+.hero-glow-one {
+    left: -10rem;
+    top: 7rem;
+    background: var(--color-primary-soft);
+}
+
+.hero-glow-two {
+    right: -14rem;
+    bottom: 1rem;
+    background: var(--color-silver-dark);
+}
+
+.section-heading {
+    max-width: 720px;
+    margin-bottom: 2rem;
+}
+
+.section-heading h2,
+.cta-card h2 {
+    font-size: clamp(2rem, 5vw, 4rem);
+    color: var(--color-white);
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+}
+
+.feature-card,
+.auth-panel,
+.application-form,
+.cta-card {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(145deg, rgba(255,255,255,0.12), rgba(255,255,255,0.055));
+    box-shadow: var(--shadow-soft);
+    backdrop-filter: blur(20px);
+}
+
+.feature-card {
+    min-height: 260px;
+    padding: 1.5rem;
+}
+
+.feature-icon {
+    display: grid;
+    width: 3rem;
+    height: 3rem;
+    place-items: center;
+    margin-bottom: 1.4rem;
+    border-radius: 1rem;
+    color: var(--color-white);
+    background: rgba(109, 40, 217, 0.46);
+    font-weight: 900;
+}
+
+.feature-card h3 {
+    color: var(--color-white);
+    font-size: 1.35rem;
+}
+
+.feature-card p {
+    margin-top: 0.8rem;
+    color: var(--color-muted);
+    line-height: 1.7;
+}
+
+.cta-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    padding: clamp(1.5rem, 4vw, 3rem);
+}
+
+.auth-grid,
+.application-grid {
+    grid-template-columns: minmax(0, 0.9fr) minmax(320px, 1.1fr);
+}
+
+.security-list {
+    display: grid;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.security-list div {
+    padding: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: rgba(255,255,255,0.06);
+}
+
+.security-list strong,
+.security-list span {
+    display: block;
+}
+
+.security-list span {
+    margin-top: 0.2rem;
+    color: var(--color-muted);
+}
+
+.auth-panel,
+.application-form {
+    padding: clamp(1.2rem, 4vw, 2rem);
+}
+
+.bank-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.7rem;
+    padding: 0.4rem;
+    margin-bottom: 1.4rem;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    background: rgba(255,255,255,0.06);
+}
+
+.bank-tabs .nav-link {
+    width: 100%;
+    border-radius: 999px;
+    color: var(--color-muted);
+    font-weight: 800;
+}
+
+.bank-tabs .nav-link.active {
+    color: var(--color-white);
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-soft));
+}
+
+.bank-form {
+    display: grid;
+    gap: 1rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.form-group {
+    display: grid;
+    gap: 0.45rem;
+}
+
+.form-group label,
+.check-line {
+    color: var(--color-silver);
+    font-size: 0.92rem;
+    font-weight: 800;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    outline: none;
+    padding: 0.95rem 1rem;
+    color: var(--color-white);
+    background: rgba(255,255,255,0.08);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.form-group select option {
+    color: #111827;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: rgba(226,232,240,0.55);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: rgba(168, 85, 247, 0.86);
+    background: rgba(255,255,255,0.11);
+    box-shadow: 0 0 0 0.2rem rgba(168, 85, 247, 0.16);
+}
+
+.password-wrapper {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: rgba(255,255,255,0.08);
+    overflow: hidden;
+}
+
+.password-wrapper input {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+}
+
+.password-toggle {
+    border: 0;
+    padding: 0 1rem;
+    color: var(--color-white);
+    background: rgba(109, 40, 217, 0.56);
+    font-weight: 800;
+}
+
+.check-line {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    line-height: 1.5;
+}
+
+.check-line input {
+    margin-top: 0.25rem;
+    accent-color: var(--color-primary-soft);
+}
+
+.form-notice {
+    padding: 0.9rem 1rem;
+    border: 1px solid rgba(168, 85, 247, 0.38);
+    border-radius: var(--radius-sm);
+    color: var(--color-white);
+    background: rgba(109, 40, 217, 0.24);
+    font-size: 0.94rem;
+}
+
+@media (max-width: 991px) {
+    .hero-grid,
+    .auth-grid,
+    .application-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .bank-card-preview {
+        min-height: 360px;
+        transform: none;
+    }
+
+    .feature-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cta-card {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 640px) {
+    .hero-actions,
+    .hero-actions .btn,
+    .cta-card .btn {
+        width: 100%;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .bank-tabs {
+        grid-template-columns: 1fr;
+        border-radius: var(--radius-md);
+    }
+}
