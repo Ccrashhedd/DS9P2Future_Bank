@@ -1,0 +1,184 @@
+<section>
+    <div class="container">
+        <h1 class="section-title">Formulario de Postulación</h1>
+        <div class="form-container">
+            <form>
+                <div class="datosPersonales_Container">
+                    <h2>Datos Personales</h2>
+
+                    <label>
+                        Cedula:
+                    </label>
+                        <select name="slctprovinciaCedula" id="slctprovinciaCedula" required>
+                            <option value="" disabled selected>Seleccione</option>
+                            <!--Se llenara automaticamente con la base de datos-->
+                        </select>
+                        <p>-</p>
+                        <input type="text" id="tomo" name="tomo" minlength="0" maxlength="4" required>
+                        <p>-</p>
+                        <input type="text" id="asiento" name="asiento" minlength="0" maxlength="5" required>
+
+                    <label>
+                        Nombre:
+                    </label>
+                        <input type="text" name="nombre" required>
+                        <input type="text" name="nombre2" >
+
+                    <label>
+                        Apellido: 
+                    </label>
+                        <input type="text" name="apellido" required>
+                        <input type="text" name="apellido2" >
+
+                    <label>
+                        Sexo:
+                    </label>
+                        <select name="sexo" required>
+                            <option value="" disabled selected>Seleccione</option>
+                            <option value="1">Masculino</option>
+                            <option value="0">Femenino</option>
+                            
+                        </select>
+
+                    <label>
+                        Fecha de Nacimiento:
+                    </label>
+                        <input type="date" name="fechaNacimiento" required>
+
+                    <label>
+                        Estado Civil:
+                    </label>
+                        <select id="slctEstadoCivil" name="slctEstadoCivil" required>
+                            <option value="" disabled selected>Seleccione</option>
+                            <!--Se llenara automaticamente con datos-->
+                        </select>
+                    
+                    <div class="apelCasada_Option">
+                        <label>
+                            Usa apellido de casada?
+                        </label>
+                            <select id="slctpreguntaApelCasada" name="preguntaApelCasada">
+                                <option value="" disabled selected>Seleccione</option>
+                                <option value="1">Si</option>
+                                <option value="0">No</option>
+                            </select>
+
+                        <label>
+                            Apellido de Casada:
+                        </label>
+                            <input type="text" id="apellidoCasada" name="apellidoCasada" disabled>
+                    </div>
+
+                    <label>
+                        Tipo de Sangre:
+                    </label>
+                        <select id="slctTipoSangre" name="slctTipoSangre" required>
+                            <option value="" disabled selected>Seleccione</option>
+                        </select>
+
+                </div>
+
+
+
+                <div class="datosUbicacion_Container">
+                    <h2>Ubicacion</h2>
+
+                    <label>
+                        Provincia:
+                    </label>
+                        <select id="slctProvincia" name="slctProvincia" required>
+                            <option value="" disabled selected>Seleccione</option>
+                            <!--Se llenara automaticamente con datos-->
+                        </select>
+                    
+                    <label>
+                        Distrito:
+                    </label>
+                        <select id="slctDistrito" name="slctDistrito" required>
+                            <option value="" disabled selected>Seleccione</option>
+                            <!--Se llenara automaticamente con datos-->
+                        </select>
+
+                    <label>
+                        Corregimiento:
+                    </label>
+                        <select id="slctCorregimiento" name="slctCorregimiento" required>
+                            <option value="" disabled selected>Seleccione</option>
+                            <!--Se llenara automaticamente con datos-->
+                        </select>
+
+                    <label>
+                        Comunidad:
+                    </label>
+                        <input type="text" id="comunidad" name="comunidad" required>
+                    
+                    <label>
+                        Calle:
+                    </label>
+                        <input type="text" id="calle" name="calle" required>
+
+                    <label>
+                        Casa:
+                    </label>
+                        <input type="text" id="casa" name="casa" required>
+                    
+                    <label>
+                        Detalle de Ubicacion:
+                    </label>
+                        <textarea id="detalleUbicacion" name="detalleUbicacion"
+                                    rows="4" cols="50"
+                                    class="fixed-textarea"></textarea>
+                    
+                    
+                </div>
+
+                <div class="datosContacto_Container">
+                    <h2>Contactos</h2>
+
+                    <label>
+                        Correo Electronico:
+                    </label>
+                        <input type="email" id="correoElectronico" name="correoElectronico" required>
+                    
+                    <label>
+                        Telefono:
+                    </label>
+                        <input type="text" id="telefono" name="telefono" required>
+                        <input type="text" id="telefono2" name="telefono2" >
+
+                    <label>
+                        Celular:
+                    </label>
+                        <input type="text" id="celular" name="celular" required>
+                        <input type="text" id="celular2" name="celular2" >
+
+                </div>
+
+                <div class="datosEstudio_Container">
+                    <h2>Estudios</h2>
+                    <div class="estudios_Container">
+                        <label>
+                            Nivel de Estudios:
+                        </label>
+                            <select id="slctNivelEstudios" name="slctNivelEstudios" required>
+                                <option value="" disabled selected>Seleccione</option>
+                                <!--Se llenara automaticamente con datos-->
+                            </select>
+                        
+                        <label>
+                            Titulo:
+                        </label>
+                            <input type="text" id="titulo" name="titulo" required>
+
+                    </div>
+
+                    <div class="documentosEstudios_Container">
+                        <!--Aqui se llenara dinamicamente con formuDocumentos-->
+
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</section>

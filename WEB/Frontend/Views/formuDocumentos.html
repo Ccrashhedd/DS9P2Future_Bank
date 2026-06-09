@@ -1,0 +1,60 @@
+<section>
+    <div class="Container">
+        <div class="formuDocumentos_Container">
+            <h2>Documentos</h2>
+            <form id="formuDocumentos" method="post" enctype="multipart/form-data">
+                
+                <input type="file" id="archivoDocumento" name="archivoDocumento" required readonly>
+
+                <label>
+                    Titulo del documento:
+                </label>
+                    <input type="text" id="tituloDocumento" name="tituloDocumento" required>
+                
+                <label>
+                    Grado de estudio:
+                </label>
+                    <select id="slctGradoEstudio" name="slctGradoEstudio" required>
+                        <option value="" disabled selected>Seleccione</option>
+                        <!--Se llenara automaticamente con datos-->
+                    </select>
+
+                <label>
+                    Institucion educativa:
+                </label>
+                    <select id="slctInstitucionEducativa" name="slctInstitucionEducativa" required>
+                        <option value="" disabled selected>Seleccione</option>
+                        <!--Se llenara automaticamente con datos-->
+                    </select>
+                
+                <label>
+                    Provincia:
+                </label>
+                    <select>
+                        <option value="" disabled selected>Seleccione</option>
+                        <!--Se llenara automaticamente con datos-->
+                    </select>
+
+                <label>
+                    Fecha de inicio de estudios:
+                </label>
+                    <input type="date" id="fechaInicioEstudios" name="fechaInicioEstudios" required>
+                
+                <label>
+                    Fecha de fin de estudios:
+                </label>
+                    <input type="date" id="fechaFinEstudios" name="fechaFinEstudios" required>
+
+                <div class="horasTotales_Container">
+
+                    <label>
+                        Horas totales:
+                    </label>
+                        <input type="Text" id="horasTotales" name="horasTotales">
+                </div>
+
+
+            </form>
+        </div>
+    </div>
+</section>

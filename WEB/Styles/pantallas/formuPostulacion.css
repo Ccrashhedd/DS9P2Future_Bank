@@ -1,0 +1,6 @@
+.fixed-textarea {
+    width: 100%;
+    height: 90px;
+    resize: none;
+    overflow-y: auto;
+}
