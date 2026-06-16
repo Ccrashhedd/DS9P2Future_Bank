@@ -4,7 +4,8 @@
             <h2>Documentos</h2>
             <form id="formuDocumentos" method="post" enctype="multipart/form-data">
                 
-                <input type="file" id="archivoDocumento" name="archivoDocumento" required readonly>
+                <input type="file" id="archivoDocumento" name="archivoDocumento" accept=".pdf,application/pdf" required>
+                <p>Solo documentos tipo PDF</p>
 
                 <label>
                     Titulo del documento:
@@ -26,6 +27,13 @@
                         <option value="" disabled selected>Seleccione</option>
                         <!--Se llenara automaticamente con datos-->
                     </select>
+                
+                <div>
+                    <label>
+                        Otra institucion:
+                    </label>
+                        <input type="text" id="otraInstitucion" name="otraInstitucion">
+                </div>
                 
                 <label>
                     Provincia:
@@ -55,6 +63,21 @@
 
 
             </form>
+            <script>
+                (function(){
+                    var input = document.getElementById('archivoDocumento');
+                    if(!input) return;
+                    input.addEventListener('change', function(){
+                        var file = this.files && this.files[0];
+                        if(!file) return;
+                        var isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+                        if(!isPdf){
+                            alert('Solo se permiten archivos PDF.');
+                            this.value = '';
+                        }
+                    });
+                })();
+            </script>
         </div>
     </div>
 </section>
