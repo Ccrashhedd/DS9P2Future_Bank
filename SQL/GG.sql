@@ -1,280 +1,54 @@
-DROP TABLE IF EXISTS POSTULANTE;
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 16-06-2026 a las 08:02:03
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.2.12
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
 
 
-DROP TABLE IF EXISTS CORREGIMIENTO;
-DROP TABLE IF EXISTS DISTRITO;
-DROP TABLE IF EXISTS PROVINCIA;
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
 
+--
+-- Base de datos: `p2gestiongeneral`
+--
 
-DROP TABLE IF EXISTS USUARIOS;
-DROP TABLE IF EXISTS ESTADOCIVIL;
-DROP TABLE IF EXISTS RANGOACADEMICO;
-DROP TABLE IF EXISTS TIPOSANGRE;
+-- --------------------------------------------------------
 
-CREATE TABLE USUARIOS (
-    idUsuario BIGINT AUTO_INCREMENT PRIMARY KEY,
-    rolUsuario TINYINT(1) NOT NULL DEFAULT 0,
-    nombreUsuario VARCHAR(30) NOT NULL,
-    contrasen VARCHAR(230) NOT NULL,
-    correo VARCHAR(50) NOT NULL UNIQUE,
+--
+-- Estructura de tabla para la tabla `corregimiento`
+--
 
-    CONSTRAINT chk_rolUsuario CHECK (rolUsuario IN (0, 1)) -- 0 para admin, 1 para usuario normal
-)ENGINE=InnoDB
-DEFAULT CHARSET=utf8mb4
-COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `corregimiento` (
+  `codigo_provincia` varchar(2) NOT NULL,
+  `codigo_distrito` varchar(4) NOT NULL,
+  `codigo` varchar(2) NOT NULL,
+  `codigo_corregimiento` varchar(6) NOT NULL,
+  `nombre_corregimiento` varchar(150) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-
-
-CREATE TABLE PROVINCIA (
-    `codigo_provincia` varchar(2) NOT NULL PRIMARY KEY,
-    `nombre_provincia` varchar(50) NOT NULL
-)ENGINE=InnoDB
-DEFAULT CHARSET=utf8mb4
-COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE DISTRITO (
-    `codigo_provincia` varchar(2) NOT NULL,
-    `codigo_distrito` varchar(4) NOT NULL PRIMARY KEY,
-    `codigo` varchar(2) NOT NULL,
-    `nombre_distrito` varchar(150) NOT NULL
-
-
-)ENGINE=InnoDB
-DEFAULT CHARSET=utf8mb4
-COLLATE=utf8mb4_unicode_ci;
-
-
-CREATE TABLE CORREGIMIENTO (
-    `codigo_provincia` varchar(2) NOT NULL,
-    `codigo_distrito` varchar(4) NOT NULL,
-    `codigo` varchar(2) NOT NULL,
-    `codigo_corregimiento` varchar(6) NOT NULL PRIMARY KEY,
-    `nombre_corregimiento` varchar(150) NOT NULL
-)ENGINE=InnoDB
-DEFAULT CHARSET=utf8mb4
-COLLATE=utf8mb4_unicode_ci;
-
-
-
-CREATE TABLE ESTADOCIVIL (
-    idEstadoCivil INT AUTO_INCREMENT PRIMARY KEY,
-    nombreEstadoCiv VARCHAR(25) NOT NULL UNIQUE
-)ENGINE=InnoDB
-DEFAULT CHARSET=utf8mb4
-COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE RANGOACADEMICO (
-    idRangoEdu INT AUTO_INCREMENT PRIMARY KEY,
-    nombreRangoEdu VARCHAR(20) NOT NULL UNIQUE
-)ENGINE=InnoDB
-DEFAULT CHARSET=utf8mb4
-COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE TIPOSANGRE (
-    idTipoSangre INT AUTO_INCREMENT PRIMARY KEY,
-    nombreTipoSangre VARCHAR(3) NOT NULL UNIQUE
-)ENGINE=InnoDB
-DEFAULT CHARSET=utf8mb4
-COLLATE=utf8mb4_unicode_ci;
-
-
-CREATE TABLE POSTULANTE (
-    idPostulante BIGINT AUTO_INCREMENT PRIMARY KEY,
-    idUsuario BIGINT NOT NULL, 
-    rangoAcademico INT NOT NULL, 
-
-    nombre VARCHAR(25) NOT NULL,
-    nombre2 VARCHAR(25) NULL, 
-    apellido VARCHAR(25) NOT NULL,
-    apellido2 VARCHAR(25) NULL,
-
-    prefijo VARCHAR(2) NOT NULL, 
-    tomo VARCHAR(4) NOT NULL,
-    asiento VARCHAR(5) NOT NULL,
-
-    genero TINYINT(1) NOT NULL,
-    estadoCivil INT NOT NULL, 
-    usaCasada TINYINT(1) NULL DEFAULT 0,
-    apelCasada VARCHAR(25) NULL,
-    tipoSangre INT NULL,
-    fechaNacimiento DATE NOT NULL,
-
-    codigo_provincia VARCHAR(2) NOT NULL, 
-    codigo_distrito VARCHAR(4) NOT NULL, 
-    codigo_corregimiento VARCHAR(6) NOT NULL, 
-    comunidad VARCHAR(45) NOT NULL, 
-    calle VARCHAR(45) NOT NULL,
-    casa VARCHAR(25) NOT NULL,
-    detalleDireccion TEXT NULL,
-
-    telefono VARCHAR(8) NULL,
-    telefono2 VARCHAR(8) NULL,
-    celular VARCHAR(9) NOT NULL,
-    celular2 VARCHAR(9) NULL,
-    correoPostulante VARCHAR(50) NOT NULL,
-
-    CONSTRAINT chk_postulante_genero CHECK (genero IN (0, 1)), -- 0 para femenino, 1 para masculino
-    CONSTRAINT chk_postulante_usaCasada CHECK (usaCasada IN (0, 1)), -- 0 para no usa apellido de casada, 1 para usa apellido de casada
-
-    CONSTRAINT fk_postulante_rangoAcademico FOREIGN KEY (rangoAcademico) REFERENCES RANGOACADEMICO (idRangoEdu),
-    CONSTRAINT fk_postulante_idUsuario FOREIGN KEY (idUsuario) REFERENCES USUARIOS (idUsuario),
-    CONSTRAINT fk_postulante_estadoCivil FOREIGN KEY (estadoCivil) REFERENCES ESTADOCIVIL (idEstadoCivil),
-    CONSTRAINT fk_postulante_tipoSangre FOREIGN KEY (tipoSangre) REFERENCES TIPOSANGRE (idTipoSangre),
-
-    CONSTRAINT fk_postulante_codigo_provincia FOREIGN KEY (codigo_provincia) REFERENCES provincia (codigo_provincia),
-    CONSTRAINT fk_postulante_codigo_distrito FOREIGN KEY (codigo_distrito) REFERENCES distrito(codigo_distrito),
-    CONSTRAINT fk_postulante_codigo_corregimiento FOREIGN KEY (codigo_corregimiento) REFERENCES corregimiento (codigo_corregimiento),
-    CONSTRAINT uq_postulante_cedula UNIQUE (prefijo, tomo, asiento)
-)ENGINE=InnoDB
-DEFAULT CHARSET=utf8mb4
-COLLATE=utf8mb4_unicode_ci;
-
-
-
-
-INSERT INTO RANGOACADEMICO VALUES
-(1, 'DIPLOMADO'),
-(2, 'TECNICO'),
-(3, 'LICENCIATURA'),
-(4, 'POSTGRADO'),
-(5, 'MAESTRIA'),
-(6, 'DOCTORADO');
-
-INSERT INTO ESTADOCIVIL VALUES
-(1, 'SOLTERO/A'),
-(2, 'CASADO/A'),
-(3, 'VIUDO/A'),
-(4, 'DIVORCIADO/A');
-
-INSERT INTO TIPOSANGRE VALUES
-(1, 'O-'),
-(2, 'O+'),
-(3, 'A-'),
-(4, 'A+'),
-(5, 'B-'),
-(6, 'B+'),
-(7, 'AB-'),
-(8, 'AB+');
-
-
-INSERT INTO USUARIOS (rolUsuario, nombreUsuario, contrasen, correo) VALUES
-(0, 'admin', 'admin123', 'admin@ejemplo.com'),
-(1, 'usuario', 'usuario123', 'usuario@ejemplo.com');
-
-
-
-
-INSERT INTO `provincia` (`codigo_provincia`, `nombre_provincia`) VALUES
-('01', 'BOCAS DEL TORO'),
-('02', 'COCLE'),
-('03', 'COLON'),
-('04', 'CHIRIQUI'),
-('05', 'DARIEN'),
-('06', 'HERRERA'),
-('07', 'LOS SANTOS'),
-('08', 'PANAMA'),
-('09', 'VERAGUAS'),
-('10', 'COMARCA GUNAYALA'),
-('11', 'COMARCA EMBERA WOUNAAN'),
-('12', 'COMARCA NGABE-BUGLE'),
-('13', 'PANAMA OESTE');
-
-INSERT INTO `distrito` (`codigo_provincia`, `codigo_distrito`, `codigo`, `nombre_distrito`) VALUES
-('01', '0101', '01', 'BOCAS DEL TORO '),
-('01', '0102', '02', 'CHANGUINOLA'),
-('01', '0103', '03', 'CHIRIQUI GRANDE'),
-('01', '0104', '04', 'ALMIRANTE'),
-('02', '0201', '01', 'AGUADULCE'),
-('02', '0202', '02', 'ANTON'),
-('02', '0203', '03', 'LA PINTADA'),
-('02', '0204', '04', 'NATA'),
-('02', '0205', '05', 'OLA'),
-('02', '0206', '06', 'PENONOME'),
-('03', '0301', '01', 'COLÓN'),
-('03', '0302', '02', 'CHAGRES'),
-('03', '0303', '03', 'DONOSO'),
-('03', '0304', '04', 'PORTOBELO'),
-('03', '0305', '05', 'SANTA ISABEL'),
-('03', '0306', '06', 'OMAR TORRIJOS HERRERA'),
-('04', '0401', '01', 'ALANJE'),
-('04', '0402', '02', 'BARU'),
-('04', '0403', '03', 'BOQUERON'),
-('04', '0404', '04', 'BOQUETE'),
-('04', '0405', '05', 'BUGABA'),
-('04', '0406', '06', 'DAVID'),
-('04', '0407', '07', 'DOLEGA'),
-('04', '0408', '08', 'GUALACA'),
-('04', '0409', '09', 'REMEDIOS'),
-('04', '0410', '10', 'RENACIMIENTO'),
-('04', '0411', '11', 'SAN FELIX'),
-('04', '0412', '12', 'SAN LORENZO'),
-('04', '0413', '13', 'TOLÉ'),
-('04', '0414', '14', 'TIERRAS ALTAS '),
-('05', '0501', '01', 'CHEPIGANA'),
-('05', '0502', '02', 'PINOGANA'),
-('05', '0503', '03', 'SANTA FE'),
-('06', '0601', '01', 'CHITRE'),
-('06', '0602', '02', 'LAS MINAS'),
-('06', '0603', '03', 'LOS POZOS'),
-('06', '0604', '04', 'OCÚ'),
-('06', '0605', '05', 'PARITA'),
-('06', '0606', '06', 'PESE'),
-('06', '0607', '07', 'SANTA MARIA'),
-('07', '0701', '01', 'GUARARE'),
-('07', '0702', '02', 'LAS TABLAS'),
-('07', '0703', '03', 'LOS SANTOS'),
-('07', '0704', '04', 'MACARACAS'),
-('07', '0705', '05', 'PEDASI'),
-('07', '0706', '06', 'POCRI'),
-('07', '0707', '07', 'TONOSI'),
-('08', '0801', '01', 'PANAMÁ'),
-('08', '0802', '02', 'BALBOA'),
-('08', '0803', '03', 'SAN MIGUELITO'),
-('08', '0804', '04', 'TABOGA'),
-('08', '0805', '05', 'CHEPO'),
-('08', '0806', '06', 'CHIMAN'),
-('09', '0901', '01', 'ATALAYA'),
-('09', '0902', '02', 'CALOBRE'),
-('09', '0903', '03', 'CAÑAZAS'),
-('09', '0904', '04', 'LA MESA'),
-('09', '0905', '05', 'LAS PALMAS'),
-('09', '0906', '06', 'MONTIJO'),
-('09', '0907', '07', 'RIO DE JESUS'),
-('09', '0908', '08', 'SAN FRANCISCO'),
-('09', '0909', '09', 'SANTA FE'),
-('09', '0910', '10', 'SANTIAGO'),
-('09', '0911', '11', 'SONA'),
-('09', '0912', '12', 'MARIATO'),
-('10', '1001', '01', 'COMARCA KUNA YALA'),
-('11', '1101', '01', 'CEMACO'),
-('11', '1102', '02', 'SAMBU'),
-('12', '1201', '01', 'BESIKO'),
-('12', '1202', '02', 'MIRONO'),
-('12', '1203', '03', 'MUNA'),
-('12', '1204', '04', 'NOLE DUIMA'),
-('12', '1205', '05', 'ÑURUM'),
-('12', '1206', '06', 'KANKINTU'),
-('12', '1207', '07', 'KUSAPIN'),
-('12', '1208', '08', 'JIRONDAI'),
-('12', '1209', '09', 'SANTA CATALINA O CALOVÉDORA'),
-('13', '1301', '01', 'ARRAIJAN'),
-('13', '1302', '02', 'LA CHORRERA'),
-('13', '1303', '03', 'CAPIRA'),
-('13', '1304', '04', 'CHAME'),
-('13', '1305', '05', 'SAN CARLOS');
-
-
+--
+-- Volcado de datos para la tabla `corregimiento`
+--
 
 INSERT INTO `corregimiento` (`codigo_provincia`, `codigo_distrito`, `codigo`, `codigo_corregimiento`, `nombre_corregimiento`) VALUES
-('01', '0101', '01', '010101', 'BOCAS DEL TORO (CAB.)'),
+('01', '0101', '01', '010101', 'BOCAS DEL TORO'),
 ('01', '0101', '02', '010102', 'BASTIMENTOS'),
-('01', '0101', '03', '010103', 'CAUCHERO'),
 ('01', '0101', '04', '010104', 'PUNTA LAUREL'),
 ('01', '0101', '05', '010105', 'TIERRA OSCURA'),
-('01', '0102', '01', '010201', 'CHANGUINOLA (CAB.)'),
+('01', '0101', '06', '010106', 'BOCA DEL DRAGO'),
+('01', '0101', '07', '010107', 'SAN CRISTÓBAL'),
+('01', '0102', '01', '010201', 'CHANGUINOLA'),
 ('01', '0102', '02', '010202', 'BARRIADA 4 DE ABRIL'),
 ('01', '0102', '03', '010203', 'GUABITO'),
-('01', '0102', '04', '010204', 'EL TERIBE'),
 ('01', '0102', '05', '010205', 'FINCA 30'),
 ('01', '0102', '06', '010206', 'FINCA 6'),
 ('01', '0102', '07', '010207', 'FINCA 60'),
@@ -284,19 +58,29 @@ INSERT INTO `corregimiento` (`codigo_provincia`, `codigo_distrito`, `codigo`, `c
 ('01', '0102', '11', '010211', 'LAS DELICIAS'),
 ('01', '0102', '12', '010212', 'COCHIGRO'),
 ('01', '0102', '13', '010213', 'LA GLORIA'),
-('01', '0103', '01', '010301', 'CHIRIQUÍ GRANDE (CAB.)'),
+('01', '0102', '14', '010214', 'BARRANCO ADENTRO'),
+('01', '0102', '15', '010215', 'FINCA 4'),
+('01', '0102', '16', '010216', 'FINCA 12'),
+('01', '0102', '17', '010217', 'FINCA 51'),
+('01', '0102', '18', '010218', 'FINCA 66'),
+('01', '0102', '19', '010219', 'LA MESA'),
+('01', '0103', '01', '010301', 'CHIRIQUÍ GRANDE'),
 ('01', '0103', '02', '010302', 'MIRAMAR'),
 ('01', '0103', '03', '010303', 'PUNTA PEÑA'),
 ('01', '0103', '04', '010304', 'PUNTA ROBALO'),
 ('01', '0103', '05', '010305', 'RAMBALA'),
 ('01', '0103', '06', '010306', 'BAJO CEDRO'),
-('01', '0104', '01', '010401', 'ALMIRANTE (CAB.)'),
-('01', '0104', '02', '010402', 'VALLE DEL RISCÓ'),
+('01', '0104', '01', '010401', 'ALMIRANTE'),
+('01', '0104', '02', '010402', 'VALLE DE RISCÓ'),
 ('01', '0104', '03', '010403', 'VALLE DE AGUA ARRIBA'),
 ('01', '0104', '04', '010404', 'NANCE DE RISCÓ'),
 ('01', '0104', '05', '010405', 'BARRIADA GUAYMÍ'),
 ('01', '0104', '06', '010406', 'BARRIO FRANCÉS'),
-('02', '0201', '01', '020101', 'AGUADULCE (CAB.)'),
+('01', '0104', '07', '010407', 'BAJO CULUBRE'),
+('01', '0104', '08', '010408', 'CAUCHERO'),
+('01', '0104', '09', '010409', 'CEIBA'),
+('01', '0104', '10', '010410', 'MIRAFLORES'),
+('02', '0201', '01', '020101', 'AGUADULCE'),
 ('02', '0201', '02', '020102', 'EL CRISTO'),
 ('02', '0201', '03', '020103', 'EL ROBLE'),
 ('02', '0201', '04', '020104', 'POCRÍ'),
@@ -304,7 +88,7 @@ INSERT INTO `corregimiento` (`codigo_provincia`, `codigo_distrito`, `codigo`, `c
 ('02', '0201', '06', '020106', 'PUEBLOS UNIDOS'),
 ('02', '0201', '07', '020107', 'VIRGEN DEL CARMEN'),
 ('02', '0201', '08', '020108', 'HATO DE SAN JUAN DE DIOS'),
-('02', '0202', '01', '020201', 'ANTÓN (CAB.)'),
+('02', '0202', '01', '020201', 'ANTÓN'),
 ('02', '0202', '02', '020202', 'CABUYA'),
 ('02', '0202', '03', '020203', 'EL CHIRÚ'),
 ('02', '0202', '04', '020204', 'EL RETIRO'),
@@ -321,19 +105,19 @@ INSERT INTO `corregimiento` (`codigo_provincia`, `codigo_distrito`, `codigo`, `c
 ('02', '0203', '05', '020305', 'PIEDRAS GORDAS'),
 ('02', '0203', '06', '020306', 'LAS LOMAS'),
 ('02', '0203', '07', '020307', 'LLANO NORTE'),
-('02', '0204', '01', '020401', 'NATÁ (CAB.)'),
+('02', '0204', '01', '020401', 'NATÁ'),
 ('02', '0204', '02', '020402', 'CAPELLANÍA'),
 ('02', '0204', '03', '020403', 'EL CAÑO'),
 ('02', '0204', '04', '020404', 'GUZMÁN'),
 ('02', '0204', '05', '020405', 'LAS HUACAS'),
 ('02', '0204', '06', '020406', 'TOZA'),
 ('02', '0204', '07', '020407', 'VILLAREAL'),
-('02', '0205', '01', '020501', 'OLÁ (CAB.)'),
+('02', '0205', '01', '020501', 'OLÁ'),
 ('02', '0205', '02', '020502', 'EL COPÉ'),
 ('02', '0205', '03', '020503', 'EL PALMAR'),
 ('02', '0205', '04', '020504', 'EL PICACHO'),
 ('02', '0205', '05', '020505', 'LA PAVA'),
-('02', '0206', '01', '020601', 'PENONOMÉ (CAB.)'),
+('02', '0206', '01', '020601', 'PENONOMÉ'),
 ('02', '0206', '02', '020602', 'CAÑAVERAL'),
 ('02', '0206', '03', '020603', 'COCLÉ'),
 ('02', '0206', '04', '020604', 'CHIGUIRÍ ARRIBA'),
@@ -343,7 +127,13 @@ INSERT INTO `corregimiento` (`codigo_provincia`, `codigo_distrito`, `codigo`, `c
 ('02', '0206', '08', '020608', 'RÍO INDIO'),
 ('02', '0206', '09', '020609', 'TOABRÉ'),
 ('02', '0206', '10', '020610', 'TULÚ'),
-('03', '0301', '01', '030101', 'BARRIO NORTE'),
+('02', '0206', '11', '020611', 'BOCA DE TUCUÉ'),
+('02', '0206', '12', '020612', 'CANDELARIO OVALLE'),
+('02', '0206', '13', '020613', 'LAS MINAS'),
+('02', '0206', '14', '020614', 'RIECITO'),
+('02', '0206', '15', '020615', 'SAN MIGUEL'),
+('02', '0206', '16', '020616', 'VICTORIANO LORENZO'),
+('03', '0301', '01', '030101', 'COLÓN'),
 ('03', '0301', '02', '030102', 'BARRIO SUR'),
 ('03', '0301', '03', '030103', 'BUENA VISTA'),
 ('03', '0301', '04', '030104', 'CATIVÁ'),
@@ -400,6 +190,8 @@ INSERT INTO `corregimiento` (`codigo_provincia`, `codigo_distrito`, `codigo`, `c
 ('04', '0402', '03', '040203', 'PROGRESO'),
 ('04', '0402', '04', '040204', 'BACO'),
 ('04', '0402', '05', '040205', 'RODOLFO AGUILAR DELGADO'),
+('04', '0402', '06', '040206', 'MANACA'),
+('04', '0402', '07', '040207', 'EL PALMAR'),
 ('04', '0403', '01', '040301', 'BOQUERÓN (CAB.)'),
 ('04', '0403', '02', '040302', 'BÁGALA'),
 ('04', '0403', '03', '040303', 'CORDILLERA'),
@@ -644,7 +436,7 @@ INSERT INTO `corregimiento` (`codigo_provincia`, `codigo_distrito`, `codigo`, `c
 ('07', '0707', '08', '070708', 'GUÁNICO'),
 ('07', '0707', '09', '070709', 'LA TRONOSA'),
 ('07', '0707', '10', '070710', 'CAMBUTAL E ISLAS DE CAÑAS'),
-('08', '0801', '01', '080101', '24 DE DICIEMBRE'),
+('08', '0801', '01', '080101', 'PANAMÁ'),
 ('08', '0801', '02', '080102', 'ALCALDE DÍAZ'),
 ('08', '0801', '03', '080103', 'ANCÓN'),
 ('08', '0801', '04', '080104', 'BETANIA'),
@@ -669,7 +461,7 @@ INSERT INTO `corregimiento` (`codigo_provincia`, `codigo_distrito`, `codigo`, `c
 ('08', '0801', '23', '080123', 'SAN FRANCISCO'),
 ('08', '0801', '24', '080124', 'SAN MARTÍN'),
 ('08', '0801', '25', '080125', 'SANTA ANA'),
-('08', '0801', '26', '080126', 'TOCÚMEN'),
+('08', '0801', '26', '080126', 'TOCUMEN'),
 ('08', '0802', '01', '080201', 'SAN MIGUEL (CAB.)'),
 ('08', '0802', '02', '080202', 'LA ENSENADA'),
 ('08', '0802', '03', '080203', 'LA ESMERALDA'),
@@ -845,6 +637,10 @@ INSERT INTO `corregimiento` (`codigo_provincia`, `codigo_distrito`, `codigo`, `c
 ('12', '1203', '10', '120310', 'ROKA'),
 ('12', '1203', '11', '120311', 'SITIO PRADO'),
 ('12', '1203', '12', '120312', 'UMANÍ'),
+('12', '1203', '13', '120313', 'DIKO'),
+('12', '1203', '14', '120314', 'KIKARI'),
+('12', '1203', '15', '120315', 'DIKERI'),
+('12', '1203', '16', '120316', 'MREENI'),
 ('12', '1204', '01', '120401', 'CERRO IGLESIAS (CAB.)'),
 ('12', '1204', '02', '120402', 'HATO CHAMÍ'),
 ('12', '1204', '03', '120403', 'JÄDABERI'),
@@ -859,22 +655,31 @@ INSERT INTO `corregimiento` (`codigo_provincia`, `codigo_distrito`, `codigo`, `c
 ('12', '1205', '07', '120507', 'EL PIRO'),
 ('12', '1205', '08', '120508', 'GUAYABITO'),
 ('12', '1205', '09', '120509', 'GÜIBALE'),
-('12', '1206', '01', '120601', 'BISIRA (CAB.)'),
-('12', '1206', '02', '120602', 'BURÍ'),
-('12', '1206', '03', '120603', 'GUARIVIARA'),
+('12', '1205', '10', '120510', 'EL PEÑÓN'),
+('12', '1205', '11', '120511', 'EL PIRO N° 2'),
+('12', '1206', '01', '120601', 'BISIRA'),
+('12', '1206', '02', '120602', 'CALANTE'),
+('12', '1206', '03', '120603', 'KANKINTÚ'),
 ('12', '1206', '04', '120604', 'GUORONÍ'),
-('12', '1206', '05', '120605', 'KANKINTÚ'),
-('12', '1206', '06', '120606', 'MUNUNÍ'),
-('12', '1206', '07', '120607', 'PIEDRA ROJA'),
-('12', '1206', '08', '120608', 'TUWAI'),
+('12', '1206', '05', '120605', 'MÜNÜNÍ'),
+('12', '1206', '06', '120606', 'PIEDRA ROJA'),
+('12', '1206', '07', '120607', 'TOLOTE'),
 ('12', '1207', '01', '120701', 'KUSAPÍN'),
 ('12', '1207', '02', '120702', 'BAHÍA AZUL'),
-('12', '1207', '03', '120703', 'CALOVÉBORA O SANTA CATALINA'),
-('12', '1207', '04', '120704', 'LOMA YUCA'),
-('12', '1207', '05', '120705', 'ISLA ESCUDO DE VERAGUAS'),
-('12', '1207', '06', '120706', 'TOBOBE'),
-('12', '1207', '07', '120707', 'VALLE BONITO'),
-('13', '1301', '01', '130101', 'ARRAIJÁN (CAB.)'),
+('12', '1207', '03', '120703', 'CAÑAVERAL'),
+('12', '1207', '04', '120704', 'RÍO CHIRIQUÍ'),
+('12', '1207', '05', '120705', 'TOBOBÉ'),
+('12', '1208', '01', '120801', 'BURÍ'),
+('12', '1208', '02', '120802', 'GUARIVIARA'),
+('12', '1208', '03', '120803', 'MAN CREEK'),
+('12', '1208', '04', '120804', 'SAMBOA'),
+('12', '1208', '05', '120805', 'TUWAI'),
+('12', '1209', '01', '120901', 'SANTA CATALINA O CALOVÉBORA'),
+('12', '1209', '02', '120902', 'ALTO BILINGÜE'),
+('12', '1209', '03', '120903', 'LOMA YUCA'),
+('12', '1209', '04', '120904', 'SAN PEDRITO'),
+('12', '1209', '05', '120905', 'VALLE BONITO'),
+('13', '1301', '01', '130101', 'ARRAIJÁN'),
 ('13', '1301', '02', '130102', 'JUAN D. AROSEMENA'),
 ('13', '1301', '03', '130103', 'NUEVO EMPERADOR'),
 ('13', '1301', '04', '130104', 'SANTA CLARA'),
@@ -882,6 +687,7 @@ INSERT INTO `corregimiento` (`codigo_provincia`, `codigo_distrito`, `codigo`, `c
 ('13', '1301', '06', '130106', 'VISTA ALEGRE'),
 ('13', '1301', '07', '130107', 'BURUNGA'),
 ('13', '1301', '08', '130108', 'CERRO SILVESTRE'),
+('13', '1301', '09', '130109', 'VACAMONTE'),
 ('13', '1302', '01', '130201', 'BARRIO BALBOA'),
 ('13', '1302', '02', '130202', 'BARRIO COLÓN'),
 ('13', '1302', '03', '130203', 'AMADOR'),
@@ -924,7 +730,7 @@ INSERT INTO `corregimiento` (`codigo_provincia`, `codigo_distrito`, `codigo`, `c
 ('13', '1304', '09', '130409', 'PUNTA CHAME'),
 ('13', '1304', '10', '130410', 'SAJALICES'),
 ('13', '1304', '11', '130411', 'SORÁ'),
-('13', '1305', '01', '130501', 'SAN CARLOS (CAB.)'),
+('13', '1305', '01', '130501', 'SAN CARLOS'),
 ('13', '1305', '02', '130502', 'EL ESPINO'),
 ('13', '1305', '03', '130503', 'EL HIGO'),
 ('13', '1305', '04', '130504', 'GUAYABITO'),
@@ -933,5 +739,386 @@ INSERT INTO `corregimiento` (`codigo_provincia`, `codigo_distrito`, `codigo`, `c
 ('13', '1305', '07', '130507', 'LAS UVAS'),
 ('13', '1305', '08', '130508', 'LOS LLANITOS'),
 ('13', '1305', '09', '130509', 'SAN JOSÉ'),
-('13', '1306', '01', '130601', 'BRILLANTE');
+('14', '1401', '01', '140101', 'SAN SAN DRUI'),
+('14', '1401', '02', '140102', 'BONYIC'),
+('14', '1401', '03', '140103', 'TERIBE');
 
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `distrito`
+--
+
+CREATE TABLE `distrito` (
+  `codigo_provincia` varchar(2) NOT NULL,
+  `codigo_distrito` varchar(4) NOT NULL,
+  `codigo` varchar(2) NOT NULL,
+  `nombre_distrito` varchar(150) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `distrito`
+--
+
+INSERT INTO `distrito` (`codigo_provincia`, `codigo_distrito`, `codigo`, `nombre_distrito`) VALUES
+('01', '0101', '01', 'BOCAS DEL TORO'),
+('01', '0102', '02', 'CHANGUINOLA'),
+('01', '0103', '03', 'CHIRIQUÍ GRANDE'),
+('01', '0104', '04', 'ALMIRANTE'),
+('02', '0201', '01', 'AGUADULCE'),
+('02', '0202', '02', 'ANTÓN'),
+('02', '0203', '03', 'LA PINTADA'),
+('02', '0204', '04', 'NATÁ'),
+('02', '0205', '05', 'OLÁ'),
+('02', '0206', '06', 'PENONOMÉ'),
+('03', '0301', '01', 'COLÓN'),
+('03', '0302', '02', 'CHAGRES'),
+('03', '0303', '03', 'DONOSO'),
+('03', '0304', '04', 'PORTOBELO'),
+('03', '0305', '05', 'SANTA ISABEL'),
+('03', '0306', '06', 'OMAR TORRIJOS HERRERA'),
+('04', '0401', '01', 'ALANJE'),
+('04', '0402', '02', 'BARÚ'),
+('04', '0403', '03', 'BOQUERÓN'),
+('04', '0404', '04', 'BOQUETE'),
+('04', '0405', '05', 'BUGABA'),
+('04', '0406', '06', 'DAVID'),
+('04', '0407', '07', 'DOLEGA'),
+('04', '0408', '08', 'GUALACA'),
+('04', '0409', '09', 'REMEDIOS'),
+('04', '0410', '10', 'RENACIMIENTO'),
+('04', '0411', '11', 'SAN FÉLIX'),
+('04', '0412', '12', 'SAN LORENZO'),
+('04', '0413', '13', 'TOLÉ'),
+('04', '0414', '14', 'TIERRAS ALTAS'),
+('05', '0501', '01', 'CHEPIGANA'),
+('05', '0502', '02', 'PINOGANA'),
+('05', '0503', '03', 'SANTA FE'),
+('06', '0601', '01', 'CHITRÉ'),
+('06', '0602', '02', 'LAS MINAS'),
+('06', '0603', '03', 'LOS POZOS'),
+('06', '0604', '04', 'OCÚ'),
+('06', '0605', '05', 'PARITA'),
+('06', '0606', '06', 'PESÉ'),
+('06', '0607', '07', 'SANTA MARÍA'),
+('07', '0701', '01', 'GUARARÉ'),
+('07', '0702', '02', 'LAS TABLAS'),
+('07', '0703', '03', 'LOS SANTOS'),
+('07', '0704', '04', 'MACARACAS'),
+('07', '0705', '05', 'PEDASÍ'),
+('07', '0706', '06', 'POCRÍ'),
+('07', '0707', '07', 'TONOSÍ'),
+('08', '0801', '01', 'PANAMÁ'),
+('08', '0802', '02', 'BALBOA'),
+('08', '0803', '03', 'SAN MIGUELITO'),
+('08', '0804', '04', 'TABOGA'),
+('08', '0805', '05', 'CHEPO'),
+('08', '0806', '06', 'CHIMÁN'),
+('09', '0901', '01', 'ATALAYA'),
+('09', '0902', '02', 'CALOBRE'),
+('09', '0903', '03', 'CAÑAZAS'),
+('09', '0904', '04', 'LA MESA'),
+('09', '0905', '05', 'LAS PALMAS'),
+('09', '0906', '06', 'MONTIJO'),
+('09', '0907', '07', 'RÍO DE JESÚS'),
+('09', '0908', '08', 'SAN FRANCISCO'),
+('09', '0909', '09', 'SANTA FE'),
+('09', '0910', '10', 'SANTIAGO'),
+('09', '0911', '11', 'SONÁ'),
+('09', '0912', '12', 'MARIATO'),
+('10', '1001', '01', 'COMARCA GUNA YALA'),
+('11', '1101', '01', 'CÉMACO'),
+('11', '1102', '02', 'SAMBÚ'),
+('12', '1201', '01', 'BESIKÓ'),
+('12', '1202', '02', 'MIRONÓ'),
+('12', '1203', '03', 'MÜNA'),
+('12', '1204', '04', 'NOLE DÜIMA'),
+('12', '1205', '05', 'ÑÜRÜM'),
+('12', '1206', '06', 'KANKINTÚ'),
+('12', '1207', '07', 'KUSAPÍN'),
+('12', '1208', '08', 'JIRONDAI'),
+('12', '1209', '09', 'SANTA CATALINA O CALOVÉBORA'),
+('13', '1301', '01', 'ARRAIJÁN'),
+('13', '1302', '02', 'LA CHORRERA'),
+('13', '1303', '03', 'CAPIRA'),
+('13', '1304', '04', 'CHAME'),
+('13', '1305', '05', 'SAN CARLOS'),
+('14', '1401', '01', 'DISTRITO ESPECIAL NASO TJËR DI');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `estadocivil`
+--
+
+CREATE TABLE `estadocivil` (
+  `idEstadoCivil` int(11) NOT NULL,
+  `nombreEstadoCiv` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `estadocivil`
+--
+
+INSERT INTO `estadocivil` (`idEstadoCivil`, `nombreEstadoCiv`) VALUES
+(2, 'CASADO/A'),
+(4, 'DIVORCIADO/A'),
+(1, 'SOLTERO/A'),
+(3, 'VIUDO/A');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `postulante`
+--
+
+CREATE TABLE `postulante` (
+  `idPostulante` bigint(20) NOT NULL,
+  `idUsuario` bigint(20) NOT NULL,
+  `rangoAcademico` int(11) NOT NULL,
+  `nombre` varchar(25) NOT NULL,
+  `nombre2` varchar(25) DEFAULT NULL,
+  `apellido` varchar(25) NOT NULL,
+  `apellido2` varchar(25) DEFAULT NULL,
+  `prefijo` varchar(2) NOT NULL,
+  `tomo` varchar(4) NOT NULL,
+  `asiento` varchar(5) NOT NULL,
+  `genero` tinyint(1) NOT NULL,
+  `estadoCivil` int(11) NOT NULL,
+  `usaCasada` tinyint(1) DEFAULT 0,
+  `apelCasada` varchar(25) DEFAULT NULL,
+  `tipoSangre` int(11) DEFAULT NULL,
+  `fechaNacimiento` date NOT NULL,
+  `codigo_provincia` varchar(2) NOT NULL,
+  `codigo_distrito` varchar(4) NOT NULL,
+  `codigo_corregimiento` varchar(6) NOT NULL,
+  `comunidad` varchar(45) NOT NULL,
+  `calle` varchar(45) NOT NULL,
+  `casa` varchar(25) NOT NULL,
+  `detalleDireccion` text DEFAULT NULL,
+  `telefono` varchar(8) DEFAULT NULL,
+  `telefono2` varchar(8) DEFAULT NULL,
+  `celular` varchar(9) NOT NULL,
+  `celular2` varchar(9) DEFAULT NULL,
+  `correoPostulante` varchar(50) NOT NULL
+) ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `provincia`
+--
+
+CREATE TABLE `provincia` (
+  `codigo_provincia` varchar(2) NOT NULL,
+  `nombre_provincia` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `provincia`
+--
+
+INSERT INTO `provincia` (`codigo_provincia`, `nombre_provincia`) VALUES
+('01', 'BOCAS DEL TORO'),
+('02', 'COCLÉ'),
+('03', 'COLÓN'),
+('04', 'CHIRIQUÍ'),
+('05', 'DARIÉN'),
+('06', 'HERRERA'),
+('07', 'LOS SANTOS'),
+('08', 'PANAMÁ'),
+('09', 'VERAGUAS'),
+('10', 'COMARCA GUNA YALA'),
+('11', 'COMARCA EMBERÁ-WOUNAAN'),
+('12', 'COMARCA NGÄBE-BUGLÉ'),
+('13', 'PANAMÁ OESTE'),
+('14', 'COMARCA NASO TJËR DI');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `rangoacademico`
+--
+
+CREATE TABLE `rangoacademico` (
+  `idRangoEdu` int(11) NOT NULL,
+  `nombreRangoEdu` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `rangoacademico`
+--
+
+INSERT INTO `rangoacademico` (`idRangoEdu`, `nombreRangoEdu`) VALUES
+(1, 'DIPLOMADO'),
+(6, 'DOCTORADO'),
+(3, 'LICENCIATURA'),
+(5, 'MAESTRIA'),
+(4, 'POSTGRADO'),
+(2, 'TECNICO');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tiposangre`
+--
+
+CREATE TABLE `tiposangre` (
+  `idTipoSangre` int(11) NOT NULL,
+  `nombreTipoSangre` varchar(3) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `tiposangre`
+--
+
+INSERT INTO `tiposangre` (`idTipoSangre`, `nombreTipoSangre`) VALUES
+(3, 'A-'),
+(4, 'A+'),
+(7, 'AB-'),
+(8, 'AB+'),
+(5, 'B-'),
+(6, 'B+'),
+(1, 'O-'),
+(2, 'O+');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `usuarios`
+--
+
+CREATE TABLE `usuarios` (
+  `idUsuario` bigint(20) NOT NULL,
+  `rolUsuario` tinyint(1) NOT NULL DEFAULT 0,
+  `nombreUsuario` varchar(30) NOT NULL,
+  `contrasen` varchar(230) NOT NULL,
+  `correo` varchar(50) NOT NULL
+) ;
+
+--
+-- Volcado de datos para la tabla `usuarios`
+--
+
+INSERT INTO `usuarios` (`idUsuario`, `rolUsuario`, `nombreUsuario`, `contrasen`, `correo`) VALUES
+(1, 0, 'admin', 'admin123', 'admin@ejemplo.com'),
+(2, 1, 'usuario', 'usuario123', 'usuario@ejemplo.com');
+
+--
+-- Índices para tablas volcadas
+--
+
+--
+-- Indices de la tabla `corregimiento`
+--
+ALTER TABLE `corregimiento`
+  ADD PRIMARY KEY (`codigo_corregimiento`);
+
+--
+-- Indices de la tabla `distrito`
+--
+ALTER TABLE `distrito`
+  ADD PRIMARY KEY (`codigo_distrito`);
+
+--
+-- Indices de la tabla `estadocivil`
+--
+ALTER TABLE `estadocivil`
+  ADD PRIMARY KEY (`idEstadoCivil`),
+  ADD UNIQUE KEY `nombreEstadoCiv` (`nombreEstadoCiv`);
+
+--
+-- Indices de la tabla `postulante`
+--
+ALTER TABLE `postulante`
+  ADD PRIMARY KEY (`idPostulante`),
+  ADD UNIQUE KEY `uq_postulante_cedula` (`prefijo`,`tomo`,`asiento`),
+  ADD KEY `fk_postulante_rangoAcademico` (`rangoAcademico`),
+  ADD KEY `fk_postulante_idUsuario` (`idUsuario`),
+  ADD KEY `fk_postulante_estadoCivil` (`estadoCivil`),
+  ADD KEY `fk_postulante_tipoSangre` (`tipoSangre`),
+  ADD KEY `fk_postulante_codigo_provincia` (`codigo_provincia`),
+  ADD KEY `fk_postulante_codigo_distrito` (`codigo_distrito`),
+  ADD KEY `fk_postulante_codigo_corregimiento` (`codigo_corregimiento`);
+
+--
+-- Indices de la tabla `provincia`
+--
+ALTER TABLE `provincia`
+  ADD PRIMARY KEY (`codigo_provincia`);
+
+--
+-- Indices de la tabla `rangoacademico`
+--
+ALTER TABLE `rangoacademico`
+  ADD PRIMARY KEY (`idRangoEdu`),
+  ADD UNIQUE KEY `nombreRangoEdu` (`nombreRangoEdu`);
+
+--
+-- Indices de la tabla `tiposangre`
+--
+ALTER TABLE `tiposangre`
+  ADD PRIMARY KEY (`idTipoSangre`),
+  ADD UNIQUE KEY `nombreTipoSangre` (`nombreTipoSangre`);
+
+--
+-- Indices de la tabla `usuarios`
+--
+ALTER TABLE `usuarios`
+  ADD PRIMARY KEY (`idUsuario`),
+  ADD UNIQUE KEY `correo` (`correo`);
+
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `estadocivil`
+--
+ALTER TABLE `estadocivil`
+  MODIFY `idEstadoCivil` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de la tabla `postulante`
+--
+ALTER TABLE `postulante`
+  MODIFY `idPostulante` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `rangoacademico`
+--
+ALTER TABLE `rangoacademico`
+  MODIFY `idRangoEdu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT de la tabla `tiposangre`
+--
+ALTER TABLE `tiposangre`
+  MODIFY `idTipoSangre` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT de la tabla `usuarios`
+--
+ALTER TABLE `usuarios`
+  MODIFY `idUsuario` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `postulante`
+--
+ALTER TABLE `postulante`
+  ADD CONSTRAINT `fk_postulante_codigo_corregimiento` FOREIGN KEY (`codigo_corregimiento`) REFERENCES `corregimiento` (`codigo_corregimiento`),
+  ADD CONSTRAINT `fk_postulante_codigo_distrito` FOREIGN KEY (`codigo_distrito`) REFERENCES `distrito` (`codigo_distrito`),
+  ADD CONSTRAINT `fk_postulante_codigo_provincia` FOREIGN KEY (`codigo_provincia`) REFERENCES `provincia` (`codigo_provincia`),
+  ADD CONSTRAINT `fk_postulante_estadoCivil` FOREIGN KEY (`estadoCivil`) REFERENCES `estadocivil` (`idEstadoCivil`),
+  ADD CONSTRAINT `fk_postulante_idUsuario` FOREIGN KEY (`idUsuario`) REFERENCES `usuarios` (`idUsuario`),
+  ADD CONSTRAINT `fk_postulante_rangoAcademico` FOREIGN KEY (`rangoAcademico`) REFERENCES `rangoacademico` (`idRangoEdu`),
+  ADD CONSTRAINT `fk_postulante_tipoSangre` FOREIGN KEY (`tipoSangre`) REFERENCES `tiposangre` (`idTipoSangre`);
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

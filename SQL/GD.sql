@@ -1,204 +1,294 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 16-06-2026 a las 08:01:56
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.2.12
 
-DROP TABLE IF EXISTS RUTA_DOCUMENTO;
-DROP TABLE IF EXISTS DOCUMENTO_POSTULANTE;
-
-DROP TABLE IF EXISTS INSTITUCIONES;
-
-
-DROP TABLE IF EXISTS GRADOACADEMICO_DOCUMENTO;
-
-CREATE TABLE GRADOACADEMICO_DOCUMENTO (
-    idGradoEst INT AUTO_INCREMENT PRIMARY KEY,
-    nombreGradoEst VARCHAR(20) NOT NULL UNIQUE
-)ENGINE=InnoDB
-DEFAULT CHARSET=utf8mb4
-COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE INSTITUCIONES (
-    idInstitucion BIGINT AUTO_INCREMENT PRIMARY KEY,
-    nombreInstitucion VARCHAR(250) NOT NULL UNIQUE
-)ENGINE=InnoDB
-DEFAULT CHARSET=utf8mb4
-COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE DOCUMENTO_POSTULANTE (
-    idDocumentoPostulante INT AUTO_INCREMENT PRIMARY KEY,
-    idGradoEst INT NOT NULL, --
-    idPostulante BIGINT NOT NULL UNIQUE, -- Esta viene de otra base de datos llamada gestionGeneral
-
-    codigo_provincia VARCHAR(2) NOT NULL, -- Esto para saber la localidad donde se solicito el documento
-    
-    titulo VARCHAR(100) NOT NULL,
-    institucion BIGINT NOT NULL,
-    otraInstitucion TINYINT(1) NULL,   -- En caso de que la institucion no este listada
-    nombreOtraInstitucion VARCHAR(250) NULL, -- Nombre de la institucion no listada, desabilitada si hay institucion seleccionada valida
-    fechaInicio DATE NOT NULL,
-    fechaFinalizacion DATE NOT NULL,
-    fechaEmision DATE NOT NULL,
-    totalHoras INT NOT NULL,
-
-    CONSTRAINT fk_gradoAcademico FOREIGN KEY (idGradoEst) REFERENCES GRADOACADEMICO_DOCUMENTO(idGradoEst),
-    CONSTRAINT fk_institucion FOREIGN KEY (institucion) REFERENCES INSTITUCIONES(idInstitucion),
-
-    CONSTRAINT chk_documento_fechaFinalizacionValida CHECK (fechaEmision <= CURDATE() AND fechaEmision >= DATE_SUB(CURDATE(), INTERVAL 5 YEAR)),
-    CONSTRAINT chk_documento_fechaFinzalizacionValida CHECK (fechaFinalizacion > fechaInicio),
-    CONSTRAINT chk_documento_fechaEmisionValida CHECK (fechaEmision > fechaFinalizacion),
-    CONSTRAINT chk_documento_totalHoras CHECK (totalHoras >= 40)
-)ENGINE=InnoDB
-DEFAULT CHARSET=utf8mb4
-COLLATE=utf8mb4_unicode_ci;
-    
-    
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
 
 
-CREATE TABLE RUTA_DOCUMENTO (
-    idRutadoc INT AUTO_INCREMENT PRIMARY KEY,
-    idDocumentoPostulante INT NOT NULL,
-    ruta VARCHAR(255) NOT NULL,
-    CONSTRAINT fk_documentoPostulante FOREIGN KEY (idDocumentoPostulante) REFERENCES DOCUMENTO_POSTULANTE(idDocumentoPostulante)
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
 
-)ENGINE=InnoDB
-DEFAULT CHARSET=utf8mb4
-COLLATE=utf8mb4_unicode_ci;
-    
+--
+-- Base de datos: `p2gestiondocumentos`
+--
 
--- Validar los 3 primeros por fecha emision < 5 anios ; horas totales >= 40 horas en general
+-- --------------------------------------------------------
 
-INSERT INTO GRADOACADEMICO_DOCUMENTO VALUES
+--
+-- Estructura de tabla para la tabla `documento_postulante`
+--
+
+CREATE TABLE `documento_postulante` (
+  `idDocumentoPostulante` int(11) NOT NULL,
+  `idGradoEst` int(11) NOT NULL,
+  `idPostulante` bigint(20) NOT NULL,
+  `codigo_provincia` varchar(2) NOT NULL,
+  `titulo` varchar(100) NOT NULL,
+  `institucion` bigint(20) NOT NULL,
+  `otraInstitucion` tinyint(1) DEFAULT NULL,
+  `nombreOtraInstitucion` varchar(250) DEFAULT NULL,
+  `fechaInicio` date NOT NULL,
+  `fechaFinalizacion` date NOT NULL,
+  `fechaEmision` date NOT NULL,
+  `totalHoras` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `gradoacademico_documento`
+--
+
+CREATE TABLE `gradoacademico_documento` (
+  `idGradoEst` int(11) NOT NULL,
+  `nombreGradoEst` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `gradoacademico_documento`
+--
+
+INSERT INTO `gradoacademico_documento` (`idGradoEst`, `nombreGradoEst`) VALUES
 (1, 'Certificado'),
 (2, 'Curso'),
-(3, 'Seminario'),
 (4, 'Diploma'),
-(5, 'Tecnico'),
+(9, 'Doctorado'),
 (6, 'Licenciatura'),
-(7, 'Postgrado'),
 (8, 'Maestria'),
-(9, 'Doctorado');
+(7, 'Postgrado'),
+(3, 'Seminario'),
+(5, 'Tecnico');
 
-INSERT IGNORE INTO INSTITUCIONES (nombreInstitucion) VALUES
-('Otra institución'),
-('Universidad de Panamá'),
-('Universidad Tecnológica de Panamá'),
-('Universidad Autónoma de Chiriquí'),
-('Universidad Especializada de las Américas'),
-('Universidad Marítima Internacional de Panamá'),
-('Universidad Católica Santa María La Antigua'),
-('Universidad Latina de Panamá'),
-('Universidad Interamericana de Panamá'),
-('Universidad del Istmo'),
-('ISAE Universidad'),
-('Universidad Metropolitana de Educación, Ciencia y Tecnología'),
-('Columbus University'),
-('Universidad Americana'),
-('Florida State University - Panamá'),
-('Quality Leadership University'),
-('Universidad Especializada del Contador Público Autorizado'),
-('Universidad del Arte Ganexa'),
-('Isthmus - Escuela de Arquitectura y Diseño'),
-('ADEN University'),
-('Universidad Latinoamericana de Comercio Exterior'),
-('Universidad Internacional de Ciencia y Tecnología'),
-('Centro Técnico de Estudios Superiores-San Miguelito'),
-('Instituto Superior de Ciencias y Tecnología Aeronáuticas'),
-('Instituto Superior de Formación Profesional Aeronáutica'),
-('Instituto Superior de Ciencias y Tecnología Aeronáuticas'),
-('Instituto Superior de Formación Profesional Aeronáutica'),
-('Centro de Educación Superior Academia de Formación de Bomberos de Panamá'),
-('Centro de Educación Superior Mundial de Capacitación'),
-('Instituto Técnico Superior de Cocina'),
-('Instituto de Enseñanza Superior Monte Horeb'),
-('Centro Técnico de Estudios Superiores-sede Bella Vista Provincia de Panamá'),
-('Instituto Bancario Internacional'),
-('Centro Tecnológico de Panamá'),
-('Instituto Superior Politécnico de América'),
-('Instituto Internacional Superior de Comercio y Educación'),
-('Instituto Superior de Ciencias y Tecnología'),
-('Instituto Técnico Superior Bilingüe Tecno Plus Monterrey'),
-('Instituto Nacional de Capacitación Profesional'),
-('Instituto Superior Bíblico de las Asambleas de Dios'),
-('Instituto Superior de Ingeniería'),
-('Instituto Superior de Adiestramiento y Soporte Técnico All Computer'),
-('Instituto Superior The Panamá Internacional Hotel School'),
-('Instituto Superior Helicópteros Personales “Flight School Division”'),
-('Instituto Superior Mag Flight Training'),
-('Instituto Superior Policial “Presidente Belisario Porras”'),
-('Instituto Superior de Bellas Artes'),
-('Instituto Superior Especializado de Artes y Folklore'),
-('Instituto Superior Canadian Technical Institute'),
-('Instituto Técnico Superior SHADDAI'),
-('Instituto Superior Académico de Panamá'),
-('Instituto Superior Politécnico Internacional'),
-('Instituto Superior de la Judicatura de Panamá Doctor César Augusto Quintero Correa'),
-('Centro de Estudios Superiores en Seguridad y Ciencias Forenses'),
-('Instituto Superior Flightmaxx Corporation'),
-('Instituto Técnico Superior San Pablo Apóstol'),
-('Instituto Técnico Superior Panameño'),
-('Instituto Técnico Superior by TAC'),
-('Instituto Superior Antequera'),
-('Instituto Superior de Formación Integral en Seguros'),
-('Instituto Superior Benjamín Rosales Pareja'),
-('Instituto Superior American Christian School'),
-('Instituto Superior de Estética y Belleza APEC, S.A.'),
-('Instituto Superior TAGUA'),
-('Instituto Superior Helipan Corp.'),
-('Instituto Técnico Superior Kaleo'),
-('Instituto Técnico Superior de Panamá'),
-('Instituto Superior de las Américas S.A.'),
-('Centro de Estudios Regionales de Panamá'),
-('Instituto Superior de Administración, Investigación y Tecnología'),
-('Instituto Superior Bellas Luces'),
-('Centro Técnológico de Panamá'),
-('Instituto Superior Especializado de Artes y Folklore'),
-('Centro de Enseñanza Superior Panamá Pacífico'),
-('Instituto Superior Integral del Éxito'),
-('Centro de Estudios Superiores de Arte y Folklore, Changuinola'),
-('Instituto Superior Los Llanos'),
-('Instituto Superior de Estudios Computarizados'),
-('Instituto Superior Aeronaval, Teniente de Fragata Manuel Castillo'),
-('Instituto Superior Aeronaval, Teniente de Fragata Manuel Castillo'),
-('Instituto Superior Especializado de Artes y Folklore'),
-('Instituto Superior Publies Educa'),
-('Instituto Superior de Competencias'),
-('Instituto de Educación Cooperativa'),
-('Instituto Superior Nueva Visión'),
-('Centro Superior Cultural & Turismo'),
-('Instituto Superior de Alta Cocina'),
-('Instituto Superior para la Capacitación'),
-('Instituto de Educación Superior Nueva Luz'),
-('Instituto Superior Centro de Líderes'),
-('Instituto Superior Maritime Profesional of Panamá'),
-('Instituto Superior Tecnológico del Claustro Gómez'),
-('Instituto Superior C&C Technologies'),
-('Instituto Superior Nueva Visión'),
-('Instituto Superior Bilingüe Culinario de Azuero'),
-('Centro de Estudios Superiores de Arte y Folklore'),
-('Centro de Estudios Superiores de Artesanía'),
-('Instituto Superior Especializado de Artes y Folklore'),
-('Centro Técnico de Estudios Superiores'),
-('Instituto Superior Bilingüe de Centroamérica'),
-('Escuela Nacional de Folklore'),
-('Instituto Superior Especializado de Artes y Folklore'),
-('Centro Técnico de Estudios Superiores'),
-('Instituto Superior Istmeño'),
-('Instituto Superior de Educación y Formación Profesional'),
-('Centro de Estudio Superior de Panamá'),
-('Instituto Superior Heli Training Panamá'),
-('Centro Nacional Cooperativo de Formación y Educación Superior'),
-('Instituto Superior STG Flight & Services'),
-('Centro Técnológico de Panamá'),
-('Instituto Superior de Educación Superior Nueva Luz'),
-('Instituto Padagógico Superior Juan Demóstenes Arosemena'),
-('Instituto Superior Latinoamericano de Administración y Tecnología Naval'),
-('Instituto Superior IGA Panamá'),
-('Instituto Superior de Investigaciones Criminales y Ciencias Forenses'),
-('Instituto Superior de Seguridad Especializada'),
-('Instituto Superior de Sistema Computarizado y Docencia'),
-('Instituto Superior de Microfinanzas'),
-('Instituto Politécnico de Azuero'),
-('Instituto de Enseñanza Superior OTEIMA'),
-('Institute Superior BRIDGE COMMUNITY COLLEGE'),
-('Centro de Estudios Superiores Ingenium'),
-('Instituto Superior Panamá Community College'),
-('Instituto Superior Panamá Tech');
+-- --------------------------------------------------------
 
+--
+-- Estructura de tabla para la tabla `instituciones`
+--
 
+CREATE TABLE `instituciones` (
+  `idInstitucion` bigint(20) NOT NULL,
+  `nombreInstitucion` varchar(250) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `instituciones`
+--
+
+INSERT INTO `instituciones` (`idInstitucion`, `nombreInstitucion`) VALUES
+(20, 'ADEN University'),
+(26, 'Centro de Educación Superior Academia de Formación de Bomberos de Panamá'),
+(27, 'Centro de Educación Superior Mundial de Capacitación'),
+(70, 'Centro de Enseñanza Superior Panamá Pacífico'),
+(96, 'Centro de Estudio Superior de Panamá'),
+(67, 'Centro de Estudios Regionales de Panamá'),
+(89, 'Centro de Estudios Superiores de Arte y Folklore'),
+(72, 'Centro de Estudios Superiores de Arte y Folklore, Changuinola'),
+(90, 'Centro de Estudios Superiores de Artesanía'),
+(52, 'Centro de Estudios Superiores en Seguridad y Ciencias Forenses'),
+(111, 'Centro de Estudios Superiores Ingenium'),
+(98, 'Centro Nacional Cooperativo de Formación y Educación Superior'),
+(80, 'Centro Superior Cultural & Turismo'),
+(91, 'Centro Técnico de Estudios Superiores'),
+(23, 'Centro Técnico de Estudios Superiores-San Miguelito'),
+(30, 'Centro Técnico de Estudios Superiores-sede Bella Vista Provincia de Panamá'),
+(32, 'Centro Tecnológico de Panamá'),
+(13, 'Columbus University'),
+(93, 'Escuela Nacional de Folklore'),
+(15, 'Florida State University - Panamá'),
+(110, 'Institute Superior BRIDGE COMMUNITY COLLEGE'),
+(31, 'Instituto Bancario Internacional'),
+(78, 'Instituto de Educación Cooperativa'),
+(83, 'Instituto de Educación Superior Nueva Luz'),
+(29, 'Instituto de Enseñanza Superior Monte Horeb'),
+(109, 'Instituto de Enseñanza Superior OTEIMA'),
+(34, 'Instituto Internacional Superior de Comercio y Educación'),
+(37, 'Instituto Nacional de Capacitación Profesional'),
+(101, 'Instituto Padagógico Superior Juan Demóstenes Arosemena'),
+(108, 'Instituto Politécnico de Azuero'),
+(49, 'Instituto Superior Académico de Panamá'),
+(75, 'Instituto Superior Aeronaval, Teniente de Fragata Manuel Castillo'),
+(60, 'Instituto Superior American Christian School'),
+(57, 'Instituto Superior Antequera'),
+(69, 'Instituto Superior Bellas Luces'),
+(59, 'Instituto Superior Benjamín Rosales Pareja'),
+(38, 'Instituto Superior Bíblico de las Asambleas de Dios'),
+(88, 'Instituto Superior Bilingüe Culinario de Azuero'),
+(92, 'Instituto Superior Bilingüe de Centroamérica'),
+(87, 'Instituto Superior C&C Technologies'),
+(47, 'Instituto Superior Canadian Technical Institute'),
+(84, 'Instituto Superior Centro de Líderes'),
+(40, 'Instituto Superior de Adiestramiento y Soporte Técnico All Computer'),
+(68, 'Instituto Superior de Administración, Investigación y Tecnología'),
+(81, 'Instituto Superior de Alta Cocina'),
+(45, 'Instituto Superior de Bellas Artes'),
+(35, 'Instituto Superior de Ciencias y Tecnología'),
+(24, 'Instituto Superior de Ciencias y Tecnología Aeronáuticas'),
+(77, 'Instituto Superior de Competencias'),
+(100, 'Instituto Superior de Educación Superior Nueva Luz'),
+(95, 'Instituto Superior de Educación y Formación Profesional'),
+(61, 'Instituto Superior de Estética y Belleza APEC, S.A.'),
+(74, 'Instituto Superior de Estudios Computarizados'),
+(58, 'Instituto Superior de Formación Integral en Seguros'),
+(25, 'Instituto Superior de Formación Profesional Aeronáutica'),
+(39, 'Instituto Superior de Ingeniería'),
+(104, 'Instituto Superior de Investigaciones Criminales y Ciencias Forenses'),
+(51, 'Instituto Superior de la Judicatura de Panamá Doctor César Augusto Quintero Correa'),
+(66, 'Instituto Superior de las Américas S.A.'),
+(107, 'Instituto Superior de Microfinanzas'),
+(105, 'Instituto Superior de Seguridad Especializada'),
+(106, 'Instituto Superior de Sistema Computarizado y Docencia'),
+(46, 'Instituto Superior Especializado de Artes y Folklore'),
+(53, 'Instituto Superior Flightmaxx Corporation'),
+(97, 'Instituto Superior Heli Training Panamá'),
+(42, 'Instituto Superior Helicópteros Personales “Flight School Division”'),
+(63, 'Instituto Superior Helipan Corp.'),
+(103, 'Instituto Superior IGA Panamá'),
+(71, 'Instituto Superior Integral del Éxito'),
+(94, 'Instituto Superior Istmeño'),
+(102, 'Instituto Superior Latinoamericano de Administración y Tecnología Naval'),
+(73, 'Instituto Superior Los Llanos'),
+(43, 'Instituto Superior Mag Flight Training'),
+(85, 'Instituto Superior Maritime Profesional of Panamá'),
+(79, 'Instituto Superior Nueva Visión'),
+(112, 'Instituto Superior Panamá Community College'),
+(113, 'Instituto Superior Panamá Tech'),
+(82, 'Instituto Superior para la Capacitación'),
+(44, 'Instituto Superior Policial “Presidente Belisario Porras”'),
+(33, 'Instituto Superior Politécnico de América'),
+(50, 'Instituto Superior Politécnico Internacional'),
+(76, 'Instituto Superior Publies Educa'),
+(99, 'Instituto Superior STG Flight & Services'),
+(62, 'Instituto Superior TAGUA'),
+(86, 'Instituto Superior Tecnológico del Claustro Gómez'),
+(41, 'Instituto Superior The Panamá Internacional Hotel School'),
+(36, 'Instituto Técnico Superior Bilingüe Tecno Plus Monterrey'),
+(56, 'Instituto Técnico Superior by TAC'),
+(28, 'Instituto Técnico Superior de Cocina'),
+(65, 'Instituto Técnico Superior de Panamá'),
+(64, 'Instituto Técnico Superior Kaleo'),
+(55, 'Instituto Técnico Superior Panameño'),
+(54, 'Instituto Técnico Superior San Pablo Apóstol'),
+(48, 'Instituto Técnico Superior SHADDAI'),
+(11, 'ISAE Universidad'),
+(19, 'Isthmus - Escuela de Arquitectura y Diseño'),
+(1, 'Otra institución'),
+(16, 'Quality Leadership University'),
+(14, 'Universidad Americana'),
+(4, 'Universidad Autónoma de Chiriquí'),
+(7, 'Universidad Católica Santa María La Antigua'),
+(2, 'Universidad de Panamá'),
+(18, 'Universidad del Arte Ganexa'),
+(10, 'Universidad del Istmo'),
+(5, 'Universidad Especializada de las Américas'),
+(17, 'Universidad Especializada del Contador Público Autorizado'),
+(9, 'Universidad Interamericana de Panamá'),
+(22, 'Universidad Internacional de Ciencia y Tecnología'),
+(8, 'Universidad Latina de Panamá'),
+(21, 'Universidad Latinoamericana de Comercio Exterior'),
+(6, 'Universidad Marítima Internacional de Panamá'),
+(12, 'Universidad Metropolitana de Educación, Ciencia y Tecnología'),
+(3, 'Universidad Tecnológica de Panamá');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `ruta_documento`
+--
+
+CREATE TABLE `ruta_documento` (
+  `idRutadoc` int(11) NOT NULL,
+  `idDocumentoPostulante` int(11) NOT NULL,
+  `ruta` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Índices para tablas volcadas
+--
+
+--
+-- Indices de la tabla `documento_postulante`
+--
+ALTER TABLE `documento_postulante`
+  ADD PRIMARY KEY (`idDocumentoPostulante`),
+  ADD KEY `fk_gradoAcademico` (`idGradoEst`),
+  ADD KEY `fk_institucion` (`institucion`);
+
+--
+-- Indices de la tabla `gradoacademico_documento`
+--
+ALTER TABLE `gradoacademico_documento`
+  ADD PRIMARY KEY (`idGradoEst`),
+  ADD UNIQUE KEY `nombreGradoEst` (`nombreGradoEst`);
+
+--
+-- Indices de la tabla `instituciones`
+--
+ALTER TABLE `instituciones`
+  ADD PRIMARY KEY (`idInstitucion`),
+  ADD UNIQUE KEY `nombreInstitucion` (`nombreInstitucion`);
+
+--
+-- Indices de la tabla `ruta_documento`
+--
+ALTER TABLE `ruta_documento`
+  ADD PRIMARY KEY (`idRutadoc`),
+  ADD KEY `fk_documentoPostulante` (`idDocumentoPostulante`);
+
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `documento_postulante`
+--
+ALTER TABLE `documento_postulante`
+  MODIFY `idDocumentoPostulante` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `gradoacademico_documento`
+--
+ALTER TABLE `gradoacademico_documento`
+  MODIFY `idGradoEst` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT de la tabla `instituciones`
+--
+ALTER TABLE `instituciones`
+  MODIFY `idInstitucion` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=114;
+
+--
+-- AUTO_INCREMENT de la tabla `ruta_documento`
+--
+ALTER TABLE `ruta_documento`
+  MODIFY `idRutadoc` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `documento_postulante`
+--
+ALTER TABLE `documento_postulante`
+  ADD CONSTRAINT `fk_gradoAcademico` FOREIGN KEY (`idGradoEst`) REFERENCES `gradoacademico_documento` (`idGradoEst`),
+  ADD CONSTRAINT `fk_institucion` FOREIGN KEY (`institucion`) REFERENCES `instituciones` (`idInstitucion`);
+
+--
+-- Filtros para la tabla `ruta_documento`
+--
+ALTER TABLE `ruta_documento`
+  ADD CONSTRAINT `fk_documentoPostulante` FOREIGN KEY (`idDocumentoPostulante`) REFERENCES `documento_postulante` (`idDocumentoPostulante`);
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

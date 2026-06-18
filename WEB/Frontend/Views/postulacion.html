@@ -1,58 +1,209 @@
 <section class="application-section section-shell">
-    <div class="container application-grid">
-        <div class="application-copy reveal-on-load">
-            <h1>Completa tu postulación inicial</h1>
-            <p>Este formulario sirve como vista base para registrar una solicitud de empleo con tus datos y documentos</p>
-
+    <div class="container application-page reveal-on-load">
+        <div class="application-copy compact-copy">
+            <span class="eyebrow">Talento Future Bank</span>
+            <h1>Formulario de postulación</h1>
+            <p>Completa tus datos generales y agrega todos los diplomas, cursos, seminarios o certificaciones que respalden tu perfil.</p>
         </div>
 
-        <form class="bank-form application-form reveal-on-load" id="postulacionForm" method="post" action="../Backend/PHP/controller/postulacion.php">
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="nombreCompleto">Nombre completo</label>
-                    <input type="text" id="nombreCompleto" name="nombreCompleto" placeholder="Nombre y apellido" required>
+        <form class="bank-form application-form postulacion-form" id="postulacionForm" method="post" enctype="multipart/form-data" data-mode="create">
+            <input type="hidden" name="action" value="guardar_postulacion">
+            <div class="form-notice is-info" data-form-message>Completa los campos obligatorios marcados en el formulario.</div>
+
+            <div class="forms-separated-layout">
+                <section class="form-module postulante-module" data-form-module="postulante">
+                    <div class="module-heading">
+                        <span class="module-step">Formulario 1</span>
+                        <div>
+                            <h2>Datos de postulación</h2>
+                            <p>Información personal, cédula, ubicación y contacto del postulante.</p>
+                        </div>
+                    </div>
+
+            <fieldset class="form-card">
+                <legend>Nivel académico principal</legend>
+                <div class="form-grid two-columns">
+                    <div class="form-group">
+                        <label for="slctNivelEstudios">Nivel de estudios principal</label>
+                        <select id="slctNivelEstudios" name="slctNivelEstudios" data-catalog="rangosAcademicos" data-value="idRangoEdu" data-label="nombreRangoEdu" required>
+                            <option value="" disabled selected>Seleccione</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="cedula">Cédula</label>
-                    <input type="text" id="cedula" name="cedula" placeholder="8-000-0000" required>
+            </fieldset>
+
+            <fieldset class="form-card">
+                <legend>Datos personales</legend>
+                <div class="form-grid cedula-grid">
+                    <div class="form-group">
+                        <label for="slctprovinciaCedula">Prefijo</label>
+                        <select name="slctprovinciaCedula" id="slctprovinciaCedula" data-catalog="provincias" data-value="codigo_provincia" data-label="codigo_provincia" required>
+                            <option value="" disabled selected>Seleccione</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tomo">Tomo</label>
+                        <input type="text" id="tomo" name="tomo" inputmode="numeric" maxlength="4" pattern="[1-9][0-9]{0,3}" placeholder="Ej. 1234" required>
+                        <small>Máximo 4 dígitos, sin iniciar con 0.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="asiento">Asiento</label>
+                        <input type="text" id="asiento" name="asiento" inputmode="numeric" maxlength="5" pattern="[1-9][0-9]{0,4}" placeholder="Ej. 12345" required>
+                        <small>Máximo 5 dígitos, sin iniciar con 0.</small>
+                    </div>
                 </div>
+
+                <div class="form-grid two-columns">
+                    <div class="form-group">
+                        <label for="nombre">Primer nombre</label>
+                        <input type="text" id="nombre" name="nombre" maxlength="25" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nombre2">Segundo nombre</label>
+                        <input type="text" id="nombre2" name="nombre2" maxlength="25">
+                    </div>
+                    <div class="form-group">
+                        <label for="apellido">Primer apellido</label>
+                        <input type="text" id="apellido" name="apellido" maxlength="25" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="apellido2">Segundo apellido</label>
+                        <input type="text" id="apellido2" name="apellido2" maxlength="25">
+                    </div>
+                    <div class="form-group">
+                        <label for="sexo">Sexo</label>
+                        <select id="sexo" name="sexo" required>
+                            <option value="" disabled selected>Seleccione</option>
+                            <option value="1">Masculino</option>
+                            <option value="0">Femenino</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="fechaNacimiento">Fecha de nacimiento</label>
+                        <input type="date" id="fechaNacimiento" name="fechaNacimiento" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="slctEstadoCivil">Estado civil</label>
+                        <select id="slctEstadoCivil" name="slctEstadoCivil" data-catalog="estadosCiviles" data-value="idEstadoCivil" data-label="nombreEstadoCiv" required>
+                            <option value="" disabled selected>Seleccione</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="slctTipoSangre">Tipo de sangre</label>
+                        <select id="slctTipoSangre" name="slctTipoSangre" data-catalog="tiposSangre" data-value="idTipoSangre" data-label="nombreTipoSangre">
+                            <option value="" selected>Seleccione</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="slctpreguntaApelCasada">¿Usa apellido de casada?</label>
+                        <select id="slctpreguntaApelCasada" name="preguntaApelCasada">
+                            <option value="0" selected>No</option>
+                            <option value="1">Sí</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="apellidoCasada">Apellido de casada</label>
+                        <input type="text" id="apellidoCasada" name="apellidoCasada" maxlength="25" disabled>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset class="form-card">
+                <legend>Ubicación</legend>
+                <div class="form-grid three-columns">
+                    <div class="form-group">
+                        <label for="slctProvincia">Provincia</label>
+                        <select id="slctProvincia" name="slctProvincia" data-catalog="provincias" data-value="codigo_provincia" data-label="nombre_provincia" required>
+                            <option value="" disabled selected>Seleccione</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="slctDistrito">Distrito</label>
+                        <select id="slctDistrito" name="slctDistrito" required>
+                            <option value="" disabled selected>Seleccione</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="slctCorregimiento">Corregimiento</label>
+                        <select id="slctCorregimiento" name="slctCorregimiento" required>
+                            <option value="" disabled selected>Seleccione</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="comunidad">Comunidad</label>
+                        <input type="text" id="comunidad" name="comunidad" maxlength="45" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="calle">Calle</label>
+                        <input type="text" id="calle" name="calle" maxlength="45" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="casa">Casa</label>
+                        <input type="text" id="casa" name="casa" maxlength="25" required>
+                    </div>
+                    <div class="form-group full-row">
+                        <label for="detalleUbicacion">Detalle de ubicación</label>
+                        <textarea id="detalleUbicacion" name="detalleUbicacion" rows="3" class="fixed-textarea" placeholder="Punto de referencia o detalle adicional"></textarea>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset class="form-card">
+                <legend>Contacto</legend>
+                <div class="form-grid two-columns">
+                    <div class="form-group full-row">
+                        <label for="correoElectronico">Correo electrónico</label>
+                        <input type="email" id="correoElectronico" name="correoElectronico" maxlength="50" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefono">Teléfono</label>
+                        <input type="text" id="telefono" name="telefono" inputmode="numeric" maxlength="9" placeholder="Opcional">
+                    </div>
+                    <div class="form-group">
+                        <label for="telefono2">Teléfono secundario</label>
+                        <input type="text" id="telefono2" name="telefono2" inputmode="numeric" maxlength="9" placeholder="Opcional">
+                    </div>
+                    <div class="form-group">
+                        <label for="celular">Celular</label>
+                        <input type="text" id="celular" name="celular" inputmode="numeric" maxlength="9" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="celular2">Celular secundario</label>
+                        <input type="text" id="celular2" name="celular2" inputmode="numeric" maxlength="9" placeholder="Opcional">
+                    </div>
+                </div>
+            </fieldset>
+
+                            </section>
+
+                <section class="form-module documentos-module" data-form-module="documentos">
+                    <div class="module-heading">
+                        <span class="module-step">Formulario 2</span>
+                        <div>
+                            <h2>Documentos académicos</h2>
+                            <p>Agrega un formulario independiente por cada diploma, curso, seminario o certificación.</p>
+                        </div>
+                    </div>
+
+            <fieldset class="form-card documents-card">
+                <div class="documents-heading">
+                    <div>
+                        <legend>Formularios de documentos</legend>
+                        <p>Cada documento tiene su propio bloque de datos. Puedes agregar o quitar formularios según necesites.</p>
+                    </div>
+                    <button type="button" class="btn btn-bank-secondary" data-add-document>Agregar formulario de documento</button>
+                </div>
+
+                <div class="documents-list" data-documents-list></div>
+            </fieldset>
+
+                            </section>
             </div>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="correo">Correo electrónico</label>
-                    <input type="email" id="correo" name="correo" placeholder="correo@dominio.com" required>
-                </div>
-                <div class="form-group">
-                    <label for="telefono">Teléfono</label>
-                    <input type="tel" id="telefono" name="telefono" placeholder="6000-0000" required>
-                </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-bank-primary">Guardar postulación</button>
+                <a href="#/postulacionusuario" class="btn btn-bank-secondary" data-link="postulacionusuario">Ver mi postulación</a>
             </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="producto">Producto solicitado</label>
-                    <select id="producto" name="producto" required>
-                        <option value="">Selecciona una opción</option>
-                        <option value="cuenta-ahorro">Cuenta de ahorro</option>
-                        <option value="cuenta-corriente">Cuenta corriente</option>
-                        <option value="tarjeta-credito">Tarjeta de crédito</option>
-                        <option value="prestamo-personal">Préstamo personal</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="ingresoMensual">Ingreso mensual aproximado</label>
-                    <input type="number" id="ingresoMensual" name="ingresoMensual" placeholder="Ej. 1200" min="0" step="0.01">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="comentario">Comentario adicional</label>
-                <textarea id="comentario" name="comentario" rows="4" placeholder="Describe brevemente el motivo de tu solicitud"></textarea>
-            </div>
-
-
-            <button type="submit" class="btn btn-bank-primary w-100">Enviar solicitud</button>
         </form>
     </div>
 </section>

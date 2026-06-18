@@ -1,0 +1,14 @@
+.postulacion-form.is-readonly {
+    position: relative;
+}
+
+.postulacion-form.is-readonly input,
+.postulacion-form.is-readonly select,
+.postulacion-form.is-readonly textarea {
+    opacity: 0.8;
+    cursor: not-allowed;
+}
+
+.postulacion-form.is-readonly .document-card {
+    background: rgba(255,255,255,0.045);
+}

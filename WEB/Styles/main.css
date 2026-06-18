@@ -1,11 +1,11 @@
 @import url('variables.css');
 @import url('base.css');
 
-
 @import url('parts/header.css');
 @import url('parts/footer.css');
 
-
 @import url('pantallas/index.css');
+@import url('pantallas/postulacion.css');
+@import url('pantallas/userPostulacion.css');
 @import url('pantallas/formuPostulacion.css');
 @import url('pantallas/formuDocumentos.css');
