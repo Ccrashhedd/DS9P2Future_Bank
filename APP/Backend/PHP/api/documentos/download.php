@@ -20,6 +20,9 @@ function resolver_pdf(string $ruta): ?string
     }
 
     $backendRoot = realpath(__DIR__ . '/../../../');
+    $projectRoot = realpath(__DIR__ . '/../../../../../');
+    $webBackendRoot = realpath(__DIR__ . '/../../../../../WEB/Backend');
+    $storageRoot = realpath(__DIR__ . '/../../../../../WEB/Backend/storage/documentos');
     $documentRoot = isset($_SERVER['DOCUMENT_ROOT']) && $_SERVER['DOCUMENT_ROOT'] !== ''
         ? realpath($_SERVER['DOCUMENT_ROOT'])
         : false;
@@ -28,8 +31,17 @@ function resolver_pdf(string $ruta): ?string
     if (es_ruta_absoluta($ruta)) {
         $candidatas[] = ['path' => $ruta, 'root' => null];
     } else {
+        if ($storageRoot !== false) {
+            $candidatas[] = ['path' => $storageRoot . DIRECTORY_SEPARATOR . ltrim($ruta, '/\\'), 'root' => $storageRoot];
+        }
+        if ($webBackendRoot !== false) {
+            $candidatas[] = ['path' => $webBackendRoot . DIRECTORY_SEPARATOR . ltrim($ruta, '/\\'), 'root' => $webBackendRoot];
+        }
         if ($backendRoot !== false) {
             $candidatas[] = ['path' => $backendRoot . DIRECTORY_SEPARATOR . ltrim($ruta, '/\\'), 'root' => $backendRoot];
+        }
+        if ($projectRoot !== false) {
+            $candidatas[] = ['path' => $projectRoot . DIRECTORY_SEPARATOR . ltrim($ruta, '/\\'), 'root' => $projectRoot];
         }
         if ($documentRoot !== false) {
             $candidatas[] = ['path' => $documentRoot . DIRECTORY_SEPARATOR . ltrim($ruta, '/\\'), 'root' => $documentRoot];

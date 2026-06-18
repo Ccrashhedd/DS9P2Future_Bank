@@ -44,9 +44,9 @@ $stmt = $db->prepare(
      INNER JOIN estadocivil ec ON ec.idEstadoCivil = p.estadoCivil
      INNER JOIN rangoacademico ra ON ra.idRangoEdu = p.rangoAcademico
      LEFT JOIN tiposangre ts ON ts.idTipoSangre = p.tipoSangre
-     INNER JOIN provincia pr ON pr.codigo_provincia = p.codigo_provincia
-     INNER JOIN distrito d ON d.codigo_distrito = p.codigo_distrito
-     INNER JOIN corregimiento c ON c.codigo_corregimiento = p.codigo_corregimiento
+     INNER JOIN provincia pr ON pr.codigo_provincia = p.codigo_provincia COLLATE utf8mb4_unicode_ci
+     INNER JOIN distrito d ON d.codigo_distrito = p.codigo_distrito COLLATE utf8mb4_unicode_ci
+     INNER JOIN corregimiento c ON c.codigo_corregimiento = p.codigo_corregimiento COLLATE utf8mb4_unicode_ci
      WHERE p.idUsuario = :idUsuario
      LIMIT 1'
 );
