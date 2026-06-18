@@ -24,21 +24,41 @@ function nullIfEmpty(?string $value): ?string
     return $value === '' ? null : $value;
 }
 
+function obtenerInstitucionesCatalogo(PDO $documental): array
+{
+    try {
+        return $documental->query('SELECT MIN(idInstitucion) AS idInstitucion, nombreInstitucion FROM instituciones GROUP BY nombreInstitucion ORDER BY CASE WHEN MIN(idInstitucion) = 1 THEN 0 ELSE 1 END, nombreInstitucion ASC')->fetchAll();
+    } catch (PDOException $e) {
+        if ($e->getCode() !== '42S02') {
+            throw $e;
+        }
+
+        return [
+            [
+                'idInstitucion' => 1,
+                'nombreInstitucion' => 'Otra institucion',
+            ],
+        ];
+    }
+}
+
 function obtenerCatalogos(): array
 {
     $general = bd(1);
     $documental = bd(2);
+    $provinciasCedula = $general->query("SELECT codigo_provincia AS prefijo_cedula, codigo_provincia AS etiqueta_prefijo_cedula FROM provincia ORDER BY CAST(codigo_provincia AS UNSIGNED), codigo_provincia")->fetchAll();
 
     return [
         'provincias' => $general->query('SELECT codigo_provincia, nombre_provincia FROM provincia ORDER BY nombre_provincia ')->fetchAll(),
-        'provinciasCedula' => $general->query('SELECT codigo_provincia FROM provincia ORDER BY codigo_provincia')->fetchAll(),
+        'provinciasCedula' => $provinciasCedula,
+        'provincias_cedulas' => $provinciasCedula,
         'distritos' => $general->query('SELECT codigo_provincia, codigo_distrito, nombre_distrito FROM distrito ORDER BY nombre_distrito')->fetchAll(),
         'corregimientos' => $general->query('SELECT codigo_distrito, codigo_corregimiento, nombre_corregimiento FROM corregimiento ORDER BY nombre_corregimiento')->fetchAll(),
         'estadosCiviles' => $general->query('SELECT idEstadoCivil, nombreEstadoCiv FROM estadocivil ORDER BY idEstadoCivil')->fetchAll(),
         'rangosAcademicos' => $general->query('SELECT idRangoEdu, nombreRangoEdu FROM rangoacademico ORDER BY idRangoEdu')->fetchAll(),
         'tiposSangre' => $general->query('SELECT idTipoSangre, nombreTipoSangre FROM tiposangre ORDER BY idTipoSangre ')->fetchAll(),
         'gradosDocumento' => $documental->query('SELECT idGradoEst, nombreGradoEst FROM gradoacademico_documento ORDER BY idGradoEst ')->fetchAll(),
-        'instituciones' => $documental->query('SELECT MIN(idInstitucion) AS idInstitucion, nombreInstitucion FROM instituciones GROUP BY nombreInstitucion ORDER BY CASE WHEN MIN(idInstitucion) = 1 THEN 0 ELSE 1 END, nombreInstitucion ASC')->fetchAll(),
+        'instituciones' => obtenerInstitucionesCatalogo($documental),
     
     ];
 }
@@ -84,6 +104,15 @@ function normalizarDocumentoPost(array $documento): array
 
 function normalizarPostulantePost(array $post): array
 {
+    $genero = (string) ($post['sexo'] ?? $post['genero'] ?? '');
+    $usaCasada = (int) ($post['preguntaApelCasada'] ?? $post['usaCasada'] ?? 0);
+    $apelCasada = nullIfEmpty((string) ($post['apellidoCasada'] ?? $post['apelCasada'] ?? ''));
+
+    if ($genero !== '0') {
+        $usaCasada = 0;
+        $apelCasada = null;
+    }
+
     return [
         'rangoAcademico' => (int) ($post['slctNivelEstudios'] ?? $post['rangoAcademico'] ?? 0),
         'nombre' => trim((string) ($post['nombre'] ?? '')),
@@ -93,10 +122,10 @@ function normalizarPostulantePost(array $post): array
         'prefijo' => trim((string) ($post['slctprovinciaCedula'] ?? $post['prefijo'] ?? '')),
         'tomo' => trim((string) ($post['tomo'] ?? '')),
         'asiento' => trim((string) ($post['asiento'] ?? '')),
-        'genero' => (string) ($post['sexo'] ?? $post['genero'] ?? ''),
+        'genero' => $genero,
         'estadoCivil' => (int) ($post['slctEstadoCivil'] ?? $post['estadoCivil'] ?? 0),
-        'usaCasada' => (int) ($post['preguntaApelCasada'] ?? $post['usaCasada'] ?? 0),
-        'apelCasada' => nullIfEmpty((string) ($post['apellidoCasada'] ?? $post['apelCasada'] ?? '')),
+        'usaCasada' => $usaCasada,
+        'apelCasada' => $apelCasada,
         'tipoSangre' => isset($post['slctTipoSangre']) && $post['slctTipoSangre'] !== '' ? (int) $post['slctTipoSangre'] : null,
         'fechaNacimiento' => trim((string) ($post['fechaNacimiento'] ?? '')),
         'codigo_provincia' => trim((string) ($post['slctProvincia'] ?? $post['codigo_provincia'] ?? '')),

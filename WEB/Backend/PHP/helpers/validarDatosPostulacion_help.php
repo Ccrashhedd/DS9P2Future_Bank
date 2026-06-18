@@ -77,7 +77,14 @@ function validarPostulante(array $data): array
         $errors[] = 'La opción de apellido de casada no es válida.';
     }
 
-    if ((string) ($data['usaCasada'] ?? '0') === '1' && trim((string) ($data['apelCasada'] ?? '')) === '') {
+    $esFemenino = (string) ($data['genero'] ?? '') === '0';
+    $usaCasada = (string) ($data['usaCasada'] ?? '0') === '1';
+
+    if (!$esFemenino && $usaCasada) {
+        $errors[] = 'Solo las postulantes de sexo femenino pueden usar apellido de casada.';
+    }
+
+    if ($esFemenino && $usaCasada && trim((string) ($data['apelCasada'] ?? '')) === '') {
         $errors[] = 'Debe indicar el apellido de casada.';
     }
 

@@ -808,15 +808,29 @@ function toggleOtraInstitucion(card) {
 
 function bindApellidoCasada(form) {
     const select = form.querySelector('#slctpreguntaApelCasada');
+    const sexo = form.querySelector('#sexo');
     select?.addEventListener('change', () => toggleApellidoCasada(form));
+    sexo?.addEventListener('change', () => toggleApellidoCasada(form));
+    toggleApellidoCasada(form);
 }
 
 function toggleApellidoCasada(form) {
     const select = form.querySelector('#slctpreguntaApelCasada');
     const input = form.querySelector('#apellidoCasada');
+    const sexo = form.querySelector('#sexo');
+    const questionGroup = form.querySelector('[data-married-name-question]') || select?.closest('.form-group');
+    const fieldGroup = form.querySelector('[data-married-name-field]') || input?.closest('.form-group');
     if (!select || !input) return;
 
-    const enabled = select.value === '1';
+    const isFemale = sexo?.value === '0';
+    const enabled = isFemale && select.value === '1';
+
+    if (questionGroup) questionGroup.hidden = !isFemale;
+    if (fieldGroup) fieldGroup.hidden = !enabled;
+
+    select.disabled = !isFemale;
+    if (!isFemale) select.value = '0';
+
     input.disabled = !enabled;
     input.required = enabled;
     if (!enabled) input.value = '';
@@ -910,6 +924,18 @@ function validatePostulacionForm(form) {
             errors.push(`Documento #${index + 1}: el total de horas debe ser mínimo 40.`);
         }
     });
+
+    const sexo = form.querySelector('#sexo')?.value || '';
+    const usaCasada = form.querySelector('#slctpreguntaApelCasada')?.value === '1';
+    const apellidoCasada = form.querySelector('#apellidoCasada')?.value.trim() || '';
+
+    if (sexo !== '0' && usaCasada) {
+        errors.push('El apellido de casada solo aplica cuando el sexo es femenino.');
+    }
+
+    if (sexo === '0' && usaCasada && !apellidoCasada) {
+        errors.push('Debe indicar el apellido de casada.');
+    }
 
     return [...new Set(errors)];
 }
