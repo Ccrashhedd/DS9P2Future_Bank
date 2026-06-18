@@ -9,6 +9,8 @@
     <title>Future Bank</title>
 </head>
 <body>
+    <div id="appNotifications" class="app-notifications" aria-live="polite" aria-atomic="true"></div>
+
     <div id="appHeader"></div>
 
     <main id="app" class="app-main" aria-live="polite">

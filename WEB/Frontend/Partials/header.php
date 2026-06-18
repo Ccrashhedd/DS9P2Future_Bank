@@ -19,14 +19,17 @@ require_once __DIR__ . '/../../Backend/PHP/config/sesion.php';
 
             <?php if(isLoggedIn()): ?>
                 <div class="collapse navbar-collapse" id="mainNavbar">
-                    <div>
-                        <span class="navbar-text me-3 d-none d-lg-block">Bienvenido, <?php echo htmlspecialchars($_SESSION['nombreUser'] ?? 'Usuario'); ?></span>
+                    <div class="userContainer">
+                        <span class="user-greeting d-none d-lg-inline-flex">
+                            <span class="user-greeting__label">Bienvenido</span>
+                            <strong class="user-greeting__name"><?php echo htmlspecialchars($_SESSION['nombreUser'] ?? 'Usuario'); ?></strong>
+                        </span>
                     </div>
                     <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
                         <li class="nav-item"><a class="nav-link" href="#/home" data-link="home">Inicio</a></li>
                         <li class="nav-item"><a class="nav-link" href="#/postulacion" data-link="postulacion">Postulación</a></li>
                         <li class="nav-item"><a class="nav-link" href="#/postulacionusuario" data-link="postulacionusuario">Mi postulación</a></li>
-                        <li class="nav-item"><a class="nav-link nav-pill" href="#/logout" data-link="logout">Cerrar sesión</a></li>
+                        <li class="nav-item"><a class="nav-link nav-pill" href="#/login" data-action="logout">Cerrar sesión</a></li>
                     </ul>
                 </div>
 

@@ -81,6 +81,10 @@ try {
 
     if ($action === 'logout') {
         logout();
+        if (isset($_SERVER['HTTP_ACCEPT']) && str_contains($_SERVER['HTTP_ACCEPT'], 'application/json')) {
+            jsonResponse(true, 'Sesión cerrada correctamente.');
+        }
+
         header('Location: ../../../Frontend/index.php#/login');
         exit;
     }

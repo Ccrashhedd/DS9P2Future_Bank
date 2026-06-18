@@ -1,6 +1,7 @@
 const app = document.querySelector('#app');
 const headerContainer = document.querySelector('#appHeader');
 const footerContainer = document.querySelector('#appFooter');
+const notificationContainer = document.querySelector('#appNotifications');
 const backendControllerPath = '../Backend/PHP/controller/controller.php';
 
 const routes = {
@@ -51,6 +52,12 @@ async function loadHtml(container, path) {
 
 async function loadView() {
     const route = getRouteFromHash();
+
+    if (route === 'logout') {
+        await handleLogout();
+        return;
+    }
+
     const viewPath = routes[route] || routes.home;
     const hashParams = getHashParams();
 
@@ -76,16 +83,43 @@ function showRouteFeedback(route, hashParams) {
     if (!message) return;
 
     const type = hashParams.has('error') ? 'error' : 'success';
-    const notice = document.createElement('div');
-    notice.className = `form-notice is-${type}`;
-    notice.textContent = message;
+    showNotification(message, type, { title: type === 'error' ? 'Error' : 'Listo' });
+}
 
-    const target = app.querySelector('.auth-panel, .application-page, .user-postulacion-page, section');
-    if (target) {
-        target.prepend(notice);
-    } else {
-        app.prepend(notice);
+function showNotification(message, type = 'info', options = {}) {
+    if (!notificationContainer) return null;
+
+    const notification = document.createElement('article');
+    notification.className = `app-notification is-${type}`;
+    notification.setAttribute('role', type === 'error' ? 'alert' : 'status');
+
+    const title = options.title || (type === 'error' ? 'Error' : type === 'success' ? 'Hecho' : 'Aviso');
+
+    notification.innerHTML = `
+        <div class="app-notification__body">
+            <div class="app-notification__title">${escapeHtml(title)}</div>
+            <div class="app-notification__message">${escapeHtml(message)}</div>
+        </div>
+        <button type="button" class="app-notification__close" aria-label="Cerrar notificación">×</button>
+    `;
+
+    const closeButton = notification.querySelector('.app-notification__close');
+    const removeNotification = () => {
+        notification.remove();
+    };
+
+    closeButton?.addEventListener('click', removeNotification);
+    notificationContainer.prepend(notification);
+
+    if (type !== 'error') {
+        window.setTimeout(() => {
+            if (notification.isConnected) {
+                notification.remove();
+            }
+        }, options.timeout ?? 4500);
     }
+
+    return notification;
 }
 
 async function loadLayout() {
@@ -95,6 +129,38 @@ async function loadLayout() {
     ]);
 
     setActiveLink(getRouteFromHash());
+    bindHeaderActions();
+}
+
+function bindHeaderActions() {
+    document.querySelectorAll('[data-action="logout"]').forEach((link) => {
+        if (link.dataset.bound === 'true') return;
+        link.dataset.bound = 'true';
+
+        link.addEventListener('click', async (event) => {
+            event.preventDefault();
+            await handleLogout();
+        });
+    });
+}
+
+async function handleLogout() {
+    try {
+        await fetch(`${backendControllerPath}?action=logout`, {
+            method: 'GET',
+            credentials: 'same-origin',
+            headers: { 'Accept': 'application/json' }
+        });
+
+        showNotification('Sesión cerrada correctamente.', 'success', { title: 'Sesión' });
+    } catch (error) {
+        showNotification('No se pudo cerrar la sesión.', 'error', { title: 'Sesión' });
+    }
+
+    catalogosCache = null;
+    window.location.hash = '#/login';
+    await loadLayout();
+    await loadView();
 }
 
 function setActiveLink(currentRoute) {
@@ -183,16 +249,19 @@ function setupLoginForm(form) {
             const result = await readJsonResponse(response);
 
             if (!response.ok || !result.ok) {
+                showNotification(result.message || 'No se pudo iniciar sesión.', 'error', { title: 'Inicio de sesión' });
                 showFormNotice(form, result.message || 'No se pudo iniciar sesión.', 'error');
                 return;
             }
 
+            showNotification(result.message || 'Login exitoso.', 'success', { title: 'Inicio de sesión' });
             showFormNotice(form, result.message || 'Login exitoso.', 'success');
             catalogosCache = null;
             window.location.hash = '#/home';
             await loadLayout();
             await loadView();
         } catch (error) {
+            showNotification('No se pudo iniciar sesión. Revisa la conexión con la base de datos o el archivo bd.php.', 'error', { title: 'Inicio de sesión' });
             showFormNotice(form, 'No se pudo iniciar sesión. Revisa la conexión con la base de datos o el archivo bd.php.', 'error');
         } finally {
             submitButton.disabled = false;
@@ -237,13 +306,16 @@ function setupRegisterForm(form) {
             const result = await readJsonResponse(response);
 
             if (!response.ok || !result.ok) {
+                showNotification(result.message || 'No se pudo registrar el usuario.', 'error', { title: 'Registro' });
                 showFormNotice(form, result.message || 'No se pudo registrar el usuario.', 'error');
                 return;
             }
 
+            showNotification(result.message || 'Registro exitoso.', 'success', { title: 'Registro' });
             showFormNotice(form, result.message || 'Registro exitoso.', 'success');
             form.reset();
         } catch (error) {
+            showNotification('No se pudo registrar el usuario. Revisa la conexión con la base de datos o el archivo bd.php.', 'error', { title: 'Registro' });
             showFormNotice(form, 'No se pudo registrar el usuario. Revisa la conexión con la base de datos o el archivo bd.php.', 'error');
         } finally {
             submitButton.disabled = false;
@@ -339,10 +411,12 @@ async function setupPostulacionForm(form) {
             const result = await readJsonResponse(response);
 
             if (!response.ok || !result.ok) {
+                showNotification(Array.isArray(result.errors) && result.errors.length ? result.errors[0] : (result.message || 'No se pudo guardar la postulación.'), 'error', { title: 'Postulación' });
                 showFormNotice(form, result.errors?.length ? result.errors : result.message, 'error');
                 return;
             }
 
+            showNotification(result.message || 'Postulación guardada correctamente.', 'success', { title: 'Postulación' });
             showFormNotice(form, result.message || 'Postulación guardada correctamente.', 'success');
 
             const refreshed = await getMiPostulacion(true);

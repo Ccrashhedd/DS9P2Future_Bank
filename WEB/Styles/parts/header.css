@@ -1,8 +1,10 @@
 .site-header {
     position: sticky;
     top: 0;
+    width: 100%;
     z-index: 1000;
     padding: 0.75rem 0;
+    -webkit-backdrop-filter: blur(18px);
     backdrop-filter: blur(18px);
     background: rgba(8, 5, 17, 0.72);
     border-bottom: 1px solid var(--color-border);
@@ -10,6 +12,14 @@
 
 .bank-navbar {
     padding: 0;
+    color: var(--color-white);
+}
+
+.bank-navbar .container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: nowrap;
 }
 
 .brand {
@@ -51,6 +61,19 @@
     font-size: 0.76rem;
 }
 
+.bank-navbar .navbar-text {
+    color: var(--color-muted);
+    font-weight: 600;
+}
+
+.bank-navbar .navbar-collapse {
+    align-items: center;
+}
+
+.bank-navbar .navbar-nav {
+    align-items: center;
+}
+
 .bank-navbar .nav-link {
     position: relative;
     border-radius: 999px;
@@ -71,6 +94,40 @@
     box-shadow: 0 14px 34px rgba(109, 40, 217, 0.26);
 }
 
+.userContainer {
+    display: flex;
+    align-items: center;
+    margin-right: 0.5rem;
+}
+
+.user-greeting {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.62rem 0.9rem;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.07);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+    color: var(--color-text);
+    white-space: nowrap;
+}
+
+.user-greeting__label {
+    color: var(--color-muted);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.user-greeting__name {
+    color: var(--color-white);
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
 .bank-toggler {
     border: 1px solid var(--color-border);
     background: rgba(255, 255, 255, 0.08);
@@ -85,11 +142,30 @@
 }
 
 @media (max-width: 991px) {
+    .bank-navbar .container {
+        flex-wrap: wrap;
+    }
+
     .navbar-collapse {
+        width: 100%;
         margin-top: 1rem;
         padding: 1rem;
         border: 1px solid var(--color-border);
         border-radius: var(--radius-md);
         background: rgba(13, 7, 28, 0.94);
+    }
+
+    .bank-navbar .navbar-text {
+        margin: 0 0 0.75rem;
+    }
+
+    .userContainer {
+        width: 100%;
+        margin: 0 0 0.75rem;
+    }
+
+    .user-greeting {
+        width: 100%;
+        justify-content: space-between;
     }
 }
