@@ -512,7 +512,7 @@ function fillCatalogSelects(scope, catalogos) {
 }
 
 function showCatalogStatus(form, catalogos) {
-    const requiredCatalogs = ['provincias', 'estadosCiviles', 'rangosAcademicos', 'tiposSangre', 'gradosDocumento', 'instituciones'];
+    const requiredCatalogs = ['provincias', 'provinciasCedula', 'estadosCiviles', 'rangosAcademicos', 'tiposSangre', 'gradosDocumento', 'instituciones'];
     const missing = requiredCatalogs.filter((key) => !Array.isArray(catalogos[key]) || catalogos[key].length === 0);
 
     if (missing.length > 0) {

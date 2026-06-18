@@ -30,14 +30,16 @@ function obtenerCatalogos(): array
     $documental = bd(2);
 
     return [
-        'provincias' => $general->query('SELECT codigo_provincia, nombre_provincia FROM provincia ORDER BY nombre_provincia')->fetchAll(),
+        'provincias' => $general->query('SELECT codigo_provincia, nombre_provincia FROM provincia ORDER BY nombre_provincia ')->fetchAll(),
+        'provinciasCedula' => $general->query('SELECT codigo_provincia FROM provincia ORDER BY codigo_provincia')->fetchAll(),
         'distritos' => $general->query('SELECT codigo_provincia, codigo_distrito, nombre_distrito FROM distrito ORDER BY nombre_distrito')->fetchAll(),
         'corregimientos' => $general->query('SELECT codigo_distrito, codigo_corregimiento, nombre_corregimiento FROM corregimiento ORDER BY nombre_corregimiento')->fetchAll(),
         'estadosCiviles' => $general->query('SELECT idEstadoCivil, nombreEstadoCiv FROM estadocivil ORDER BY idEstadoCivil')->fetchAll(),
         'rangosAcademicos' => $general->query('SELECT idRangoEdu, nombreRangoEdu FROM rangoacademico ORDER BY idRangoEdu')->fetchAll(),
-        'tiposSangre' => $general->query('SELECT idTipoSangre, nombreTipoSangre FROM tiposangre ORDER BY idTipoSangre')->fetchAll(),
-        'gradosDocumento' => $documental->query('SELECT idGradoEst, nombreGradoEst FROM gradoacademico_documento ORDER BY idGradoEst')->fetchAll(),
-        'instituciones' => $documental->query('SELECT idInstitucion, nombreInstitucion FROM instituciones ORDER BY nombreInstitucion')->fetchAll(),
+        'tiposSangre' => $general->query('SELECT idTipoSangre, nombreTipoSangre FROM tiposangre ORDER BY idTipoSangre ')->fetchAll(),
+        'gradosDocumento' => $documental->query('SELECT idGradoEst, nombreGradoEst FROM gradoacademico_documento ORDER BY idGradoEst ')->fetchAll(),
+        'instituciones' => $documental->query('SELECT MIN(idInstitucion) AS idInstitucion, nombreInstitucion FROM instituciones GROUP BY nombreInstitucion ORDER BY CASE WHEN MIN(idInstitucion) = 1 THEN 0 ELSE 1 END, nombreInstitucion ASC')->fetchAll(),
+    
     ];
 }
 
