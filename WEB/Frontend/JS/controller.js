@@ -14,6 +14,7 @@ const routes = {
 let catalogosCache = null;
 let documentTemplateCache = null;
 let documentIndex = 0;
+const estadosCivilesApellidoCasada = ['2', '3'];
 
 function getRouteFromHash() {
     const hash = window.location.hash.replace('#/', '').trim();
@@ -809,8 +810,10 @@ function toggleOtraInstitucion(card) {
 function bindApellidoCasada(form) {
     const select = form.querySelector('#slctpreguntaApelCasada');
     const sexo = form.querySelector('#sexo');
+    const estadoCivil = form.querySelector('#slctEstadoCivil');
     select?.addEventListener('change', () => toggleApellidoCasada(form));
     sexo?.addEventListener('change', () => toggleApellidoCasada(form));
+    estadoCivil?.addEventListener('change', () => toggleApellidoCasada(form));
     toggleApellidoCasada(form);
 }
 
@@ -818,18 +821,21 @@ function toggleApellidoCasada(form) {
     const select = form.querySelector('#slctpreguntaApelCasada');
     const input = form.querySelector('#apellidoCasada');
     const sexo = form.querySelector('#sexo');
+    const estadoCivil = form.querySelector('#slctEstadoCivil');
     const questionGroup = form.querySelector('[data-married-name-question]') || select?.closest('.form-group');
     const fieldGroup = form.querySelector('[data-married-name-field]') || input?.closest('.form-group');
     if (!select || !input) return;
 
     const isFemale = sexo?.value === '0';
-    const enabled = isFemale && select.value === '1';
+    const estadoCivilPermiteApellidoCasada = estadosCivilesApellidoCasada.includes(String(estadoCivil?.value || ''));
+    const canUseApellidoCasada = isFemale && estadoCivilPermiteApellidoCasada;
+    const enabled = canUseApellidoCasada && select.value === '1';
 
-    if (questionGroup) questionGroup.hidden = !isFemale;
+    if (questionGroup) questionGroup.hidden = !canUseApellidoCasada;
     if (fieldGroup) fieldGroup.hidden = !enabled;
 
-    select.disabled = !isFemale;
-    if (!isFemale) select.value = '0';
+    select.disabled = !canUseApellidoCasada;
+    if (!canUseApellidoCasada) select.value = '0';
 
     input.disabled = !enabled;
     input.required = enabled;
@@ -926,14 +932,16 @@ function validatePostulacionForm(form) {
     });
 
     const sexo = form.querySelector('#sexo')?.value || '';
+    const estadoCivil = form.querySelector('#slctEstadoCivil')?.value || '';
     const usaCasada = form.querySelector('#slctpreguntaApelCasada')?.value === '1';
     const apellidoCasada = form.querySelector('#apellidoCasada')?.value.trim() || '';
+    const puedeUsarApellidoCasada = sexo === '0' && estadosCivilesApellidoCasada.includes(String(estadoCivil));
 
-    if (sexo !== '0' && usaCasada) {
-        errors.push('El apellido de casada solo aplica cuando el sexo es femenino.');
+    if (!puedeUsarApellidoCasada && usaCasada) {
+        errors.push('El apellido de casada solo aplica cuando el sexo es femenino y el estado civil es casada o viuda.');
     }
 
-    if (sexo === '0' && usaCasada && !apellidoCasada) {
+    if (puedeUsarApellidoCasada && usaCasada && !apellidoCasada) {
         errors.push('Debe indicar el apellido de casada.');
     }
 

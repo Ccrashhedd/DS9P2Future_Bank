@@ -44,9 +44,9 @@ $stmt = $db->prepare(
      INNER JOIN estadocivil ec ON ec.idEstadoCivil = p.estadoCivil
      INNER JOIN rangoacademico ra ON ra.idRangoEdu = p.rangoAcademico
      LEFT JOIN tiposangre ts ON ts.idTipoSangre = p.tipoSangre
-     INNER JOIN provincia pr ON pr.codigo_provincia = p.codigo_provincia COLLATE utf8mb4_unicode_ci
-     INNER JOIN distrito d ON d.codigo_distrito = p.codigo_distrito COLLATE utf8mb4_unicode_ci
-     INNER JOIN corregimiento c ON c.codigo_corregimiento = p.codigo_corregimiento COLLATE utf8mb4_unicode_ci
+     INNER JOIN provincia pr ON pr.codigo_provincia = p.codigo_provincia
+     INNER JOIN distrito d ON d.codigo_distrito = p.codigo_distrito
+     INNER JOIN corregimiento c ON c.codigo_corregimiento = p.codigo_corregimiento
      WHERE p.idUsuario = :idUsuario
      LIMIT 1'
 );
@@ -79,17 +79,6 @@ $genero = match ((string) $row['genero']) {
     default => 'No especificado',
 };
 
-$estadoCivil = (string) $row['nombreEstadoCiv'];
-$usaApellidoCasada = (int) ($row['usaCasada'] ?? 0) === 1;
-$estadoPermiteApellidoCasada = in_array(strtoupper($estadoCivil), ['CASADO/A', 'VIUDO/A'], true);
-$apellidoCasada = null;
-if ($genero === 'Femenino' && $estadoPermiteApellidoCasada && $usaApellidoCasada) {
-    $apellidoCasada = texto($row['apelCasada'] ?? '');
-    if ($apellidoCasada === '') {
-        $apellidoCasada = null;
-    }
-}
-
 $direccion = unir_partes([
     $row['nombre_provincia'],
     $row['nombre_distrito'],
@@ -108,8 +97,7 @@ json_respuesta([
         'nombreCompleto' => unir_partes([$row['nombre'], $row['nombre2'], $row['apellido'], $row['apellido2']]),
         'cedula' => unir_partes([$row['prefijo'], $row['tomo'], $row['asiento']], '-'),
         'genero' => $genero,
-        'estadoCivil' => $estadoCivil,
-        'apellidoCasada' => $apellidoCasada,
+        'estadoCivil' => $row['nombreEstadoCiv'],
         'rangoAcademico' => $row['nombreRangoEdu'],
         'tipoSangre' => $row['nombreTipoSangre'],
         'fechaNacimiento' => $row['fechaNacimiento'],

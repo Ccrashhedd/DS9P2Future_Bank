@@ -78,13 +78,15 @@ function validarPostulante(array $data): array
     }
 
     $esFemenino = (string) ($data['genero'] ?? '') === '0';
+    $estadoCivilPermiteApellidoCasada = in_array((int) ($data['estadoCivil'] ?? 0), [2, 3], true);
+    $puedeUsarApellidoCasada = $esFemenino && $estadoCivilPermiteApellidoCasada;
     $usaCasada = (string) ($data['usaCasada'] ?? '0') === '1';
 
-    if (!$esFemenino && $usaCasada) {
-        $errors[] = 'Solo las postulantes de sexo femenino pueden usar apellido de casada.';
+    if (!$puedeUsarApellidoCasada && $usaCasada) {
+        $errors[] = 'El apellido de casada solo aplica cuando el sexo es femenino y el estado civil es casada o viuda.';
     }
 
-    if ($esFemenino && $usaCasada && trim((string) ($data['apelCasada'] ?? '')) === '') {
+    if ($puedeUsarApellidoCasada && $usaCasada && trim((string) ($data['apelCasada'] ?? '')) === '') {
         $errors[] = 'Debe indicar el apellido de casada.';
     }
 

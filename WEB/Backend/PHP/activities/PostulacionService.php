@@ -105,10 +105,12 @@ function normalizarDocumentoPost(array $documento): array
 function normalizarPostulantePost(array $post): array
 {
     $genero = (string) ($post['sexo'] ?? $post['genero'] ?? '');
+    $estadoCivil = (int) ($post['slctEstadoCivil'] ?? $post['estadoCivil'] ?? 0);
     $usaCasada = (int) ($post['preguntaApelCasada'] ?? $post['usaCasada'] ?? 0);
     $apelCasada = nullIfEmpty((string) ($post['apellidoCasada'] ?? $post['apelCasada'] ?? ''));
+    $puedeUsarApellidoCasada = $genero === '0' && in_array($estadoCivil, [2, 3], true);
 
-    if ($genero !== '0') {
+    if (!$puedeUsarApellidoCasada) {
         $usaCasada = 0;
         $apelCasada = null;
     }
@@ -123,7 +125,7 @@ function normalizarPostulantePost(array $post): array
         'tomo' => trim((string) ($post['tomo'] ?? '')),
         'asiento' => trim((string) ($post['asiento'] ?? '')),
         'genero' => $genero,
-        'estadoCivil' => (int) ($post['slctEstadoCivil'] ?? $post['estadoCivil'] ?? 0),
+        'estadoCivil' => $estadoCivil,
         'usaCasada' => $usaCasada,
         'apelCasada' => $apelCasada,
         'tipoSangre' => isset($post['slctTipoSangre']) && $post['slctTipoSangre'] !== '' ? (int) $post['slctTipoSangre'] : null,
